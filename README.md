@@ -93,7 +93,7 @@ Ensure the variables are configured:
 ```env
 PORT=5000
 JWT_SECRET=your_jwt_secret_here
-MONGO_URI=mongodb+srv://<username>:<password>@cluster0.xxxx.mongodb.net/futuredna?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://[username]:[password]@cluster0.xxxx.mongodb.net/futuredna?retryWrites=true&w=majority
 ```
 
 ### 3. Install Dependencies
