@@ -107,7 +107,7 @@ Launch both servers concurrently from the root directory using:
 ```bash
 npm run dev
 ```
-- **Frontend client** launches at: [http://localhost:3000](http://localhost:3000)
+- **Frontend client** launches at: `http://localhost:3000`
 - **Backend server** listens at: `http://localhost:5000`
 
 ---
