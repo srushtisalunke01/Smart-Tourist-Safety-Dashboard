@@ -61,8 +61,12 @@ export default function Login() {
 
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex p-3 bg-brand-500/10 border border-brand-500/20 text-brand-500 rounded-2xl mb-4">
-            <Shield className="w-6 h-6 animate-pulse" />
+          <div className="inline-flex p-1 bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-2xl mb-4 shadow-xl">
+            <img 
+              src="/logo.png" 
+              alt="SafeTour Logo" 
+              className="w-16 h-16 object-contain rounded-xl" 
+            />
           </div>
           <h2 className="text-2xl font-black text-slate-900 dark:text-white">{t("auth.signInTitle")}</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t("auth.signInSubtitle")}</p>
