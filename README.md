@@ -1,4 +1,4 @@
-# 🛡️ SafeTour AI: Smart Tourist Safety & Incident Response Dashboard
+# SafeTour AI: Smart Tourist Safety & Incident Response Dashboard
 
 SafeTour AI is a state-of-the-art MERN Stack full-stack application designed to ensure the safety, security, and convenience of international and domestic tourists. It combines real-time emergency responder dispatching, AI-powered travel tools, crowdsourced scam tracking, and a comprehensive localization system to create a resilient safety net for travelers.
 
