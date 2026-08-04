@@ -75,7 +75,7 @@ export default function Navbar() {
           <img 
             src="/logo.png" 
             alt="SafeTour Logo" 
-            className="w-8 h-8 object-contain rounded-lg shadow-md group-hover:scale-105 transition-transform" 
+            className="w-10 h-10 object-contain rounded-lg shadow-md group-hover:scale-105 transition-transform" 
           />
           <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:via-slate-100 dark:to-slate-400 bg-clip-text text-transparent">
             SafeTour <span className="text-brand-500 font-bold">AI</span>
