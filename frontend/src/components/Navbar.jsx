@@ -72,9 +72,11 @@ export default function Navbar() {
         
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="bg-gradient-to-tr from-brand-600 to-brand-500 p-2 rounded-xl text-white shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
-            <Shield className="w-5 h-5" />
-          </div>
+          <img 
+            src="/logo.png" 
+            alt="SafeTour Logo" 
+            className="w-8 h-8 object-contain rounded-lg shadow-md group-hover:scale-105 transition-transform" 
+          />
           <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:via-slate-100 dark:to-slate-400 bg-clip-text text-transparent">
             SafeTour <span className="text-brand-500 font-bold">AI</span>
           </span>
