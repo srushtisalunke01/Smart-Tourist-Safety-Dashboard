@@ -1,0 +1,10 @@
+{
+  "name": "safetour-project",
+  "version": "1.0.0",
+  "description": "SafeTour AI Root Script Manager",
+  "scripts": {
+    "install-all": "npm --prefix backend install && npm --prefix frontend install",
+    "start": "node start.js",
+    "dev": "node start.js"
+  }
+}

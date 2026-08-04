@@ -1,0 +1,43 @@
+name: SafeTour CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js Environment
+      uses: actions/setup-node@v3
+      with:
+        node-size: 20
+        cache: 'npm'
+        cache-dependency-path: |
+          backend/package-lock.json
+          frontend/package-lock.json
+
+    # Test Backend Build
+    - name: Build Backend
+      run: |
+        cd backend
+        npm ci
+        npx prisma generate
+        npm run build
+
+    # Test Frontend Build
+    - name: Build Frontend
+      run: |
+        cd frontend
+        npm ci
+        npm run build
+
+    # Test Docker Compose Orchestration Build
+    - name: Verify Docker Compose Build
+      run: docker compose build
