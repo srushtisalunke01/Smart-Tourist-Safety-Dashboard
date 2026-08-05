@@ -54,12 +54,19 @@ export default function FloatingActionContainer() {
       });
 
       // Adjust bottom offset if there's a collision
-      if (collisionHeight > 0) {
-        setBottomOffset(collisionHeight + 16);
-      } else {
-        setBottomOffset(baseBottom);
+      let finalBottom = collisionHeight > 0 ? collisionHeight + 16 : baseBottom;
+      let finalRight = baseRight;
+
+      if (isChatExpanded) {
+        if (width < 768) {
+          finalBottom = Math.max(finalBottom, 96);
+        } else {
+          finalRight = baseRight + 448;
+        }
       }
-      setRightOffset(baseRight);
+
+      setBottomOffset(finalBottom);
+      setRightOffset(finalRight);
     };
 
     handleResizeAndCollisions();
@@ -88,14 +95,6 @@ export default function FloatingActionContainer() {
     >
       <ChatAssistant />
       <SOSWidget />
-      
-      {/* Spacer to push SOS widget up when Chatbot is expanded */}
-      {isChatExpanded && (
-        <div 
-          className="transition-all duration-300" 
-          style={{ height: isSmallHeight ? '70px' : '100px' }} 
-        />
-      )}
     </div>
   );
 }
