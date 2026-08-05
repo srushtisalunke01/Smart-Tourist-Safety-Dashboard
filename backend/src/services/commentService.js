@@ -17,6 +17,13 @@ class CommentService {
     return commentRepository.update(id, { text });
   }
 
+  async replyToComment(commentId, userId, userName, text) {
+    const comment = await commentRepository.findById(commentId);
+    if (!comment) return null;
+    comment.replies.push({ user: userId, userName, text, createdAt: new Date() });
+    return comment.save();
+  }
+
   async deleteComment(id) {
     return commentRepository.delete(id);
   }

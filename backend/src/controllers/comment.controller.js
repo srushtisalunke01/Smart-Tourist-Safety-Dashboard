@@ -37,6 +37,21 @@ class CommentController {
       next(err);
     }
   }
+
+  async replyToComment(req, res, next) {
+    try {
+      const comment = await commentService.replyToComment(
+        req.params.id,
+        req.user.id,
+        req.user.name,
+        req.body.text
+      );
+      if (!comment) return res.status(404).json({ message: 'Comment not found' });
+      res.status(201).json(comment);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = new CommentController();
