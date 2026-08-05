@@ -345,19 +345,52 @@ const Community = () => {
         {/* Right Side: Feed List */}
         <div className="lg:col-span-7 space-y-6">
           
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 dark:border-white/5 pb-3">
-            <h3 className="font-extrabold text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wider">
-              {t("community.reviewBoard") || "Traveler Experience Board"} ({filteredPosts.length})
-            </h3>
-            <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3.5 top-2.5 w-3.5 h-3.5 text-slate-500 pointer-events-none" />
-              <input
-                type="text"
-                placeholder={t("searchPlaceholder") || "Search reviews or locations..."}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-brand-500 font-semibold"
-              />
+                  <div className="flex flex-col gap-4 border-b border-slate-200 dark:border-white/5 pb-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <h3 className="font-extrabold text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wider">
+                {t("community.reviewBoard") || "Traveler Experience Board"} ({filteredPosts.length})
+              </h3>
+              <div className="relative w-full sm:w-64">
+                <Search className="absolute left-3.5 top-2.5 w-3.5 h-3.5 text-slate-500 pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder={t("searchPlaceholder") || "Search reviews or locations..."}
+                  value={searchQuery}
+                  onChange={(e) => { setSearchQuery(e.target.value); setVisibleCount(5); }}
+                  className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-brand-500 font-semibold"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold">Region:</span>
+                <select
+                  value={selectedLocation}
+                  onChange={(e) => { setSelectedLocation(e.target.value); setVisibleCount(5); }}
+                  className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 text-[10px] py-1 px-2.5 rounded-lg focus:outline-none font-bold cursor-pointer"
+                >
+                  <option value="All">All Locations</option>
+                  <option value="Goa">Goa</option>
+                  <option value="Jaipur">Jaipur</option>
+                  <option value="Delhi">Delhi</option>
+                  <option value="Mumbai">Mumbai</option>
+                </select>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold">Safety Rating:</span>
+                <select
+                  value={minSafetyRating}
+                  onChange={(e) => { setMinSafetyRating(e.target.value); setVisibleCount(5); }}
+                  className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 text-[10px] py-1 px-2.5 rounded-lg focus:outline-none font-bold cursor-pointer"
+                >
+                  <option value="All">All Ratings</option>
+                  <option value="5">5 Stars only</option>
+                  <option value="4">4 Stars & above</option>
+                  <option value="3">3 Stars & above</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -365,7 +398,7 @@ const Community = () => {
             {filteredPosts.length === 0 ? (
               <p className="text-xs text-slate-500 py-12 text-center">No community posts found. Share your experience!</p>
             ) : (
-              filteredPosts.map((post) => {
+              filteredPosts.slice(0, visibleCount).map((post) => {
                 const userIdStr = user?.id || user?._id;
                 const postUserIdStr = post.user?._id || post.user;
                 const isAuthor = user && post.user && (postUserIdStr === userIdStr);
@@ -385,7 +418,7 @@ const Community = () => {
                                 <button 
                                   onClick={() => handleStartEdit(post)} 
                                   title="Edit review"
-                                  className="p-1 text-slate-450 hover:text-brand-500 dark:text-slate-650 dark:hover:text-brand-400 transition-colors"
+                                  className="p-1 text-slate-455 hover:text-brand-500 dark:text-slate-650 dark:hover:text-brand-400 transition-colors"
                                 >
                                   <Edit className="w-3.5 h-3.5" />
                                 </button>
@@ -393,7 +426,7 @@ const Community = () => {
                               <button 
                                 onClick={() => handleDeletePost(post._id)} 
                                 title="Delete review"
-                                className="p-1 text-slate-450 hover:text-red-500 dark:text-slate-655 dark:hover:text-red-400 transition-colors"
+                                  className="p-1 text-slate-455 hover:text-red-500 dark:text-slate-655 dark:hover:text-red-400 transition-colors"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
@@ -436,8 +469,15 @@ const Community = () => {
                     {/* Content body */}
                     <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">{post.content}</p>
 
-                    {/* Liked & Comments metrics */}
-                    <div className="flex items-center gap-4 border-y border-slate-200 dark:border-white/5 py-3 text-[10px] font-bold text-slate-550 dark:text-slate-400">
+                    {/* Image display */}
+                    {post.imageUrl && (
+                      <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-white/5 h-48 w-full shadow-inner">
+                        <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover" />
+                      </div>
+                    )}
+
+                    {/* Liked, Comments, & Bookmarks metrics */}
+                    <div className="flex items-center gap-4 border-y border-slate-200 dark:border-white/5 py-3 text-[10px] font-bold text-slate-555 dark:text-slate-400">
                       <button onClick={() => likePost(post._id)} className="flex items-center gap-1.5 hover:text-danger-550 dark:hover:text-danger-500 transition-colors">
                         <Heart className="w-4 h-4 text-red-500 dark:text-danger-500 fill-danger-500/10" />
                         <span>{post.likes || 0} Likes</span>
@@ -446,15 +486,71 @@ const Community = () => {
                         <MessageSquare className="w-4 h-4 text-brand-500" />
                         <span>{post.comments?.length || 0} Comments</span>
                       </span>
+                      <button 
+                        onClick={() => {
+                          const isBookmarked = (bookmarks || []).some(b => b.targetType === 'CommunityPost' && b.targetId === post._id);
+                          if (isBookmarked) {
+                            removeBookmark('CommunityPost', post._id);
+                          } else {
+                            addBookmark('CommunityPost', post._id);
+                          }
+                        }}
+                        className="flex items-center gap-1.5 hover:text-brand-550 dark:hover:text-brand-400 transition-colors cursor-pointer"
+                      >
+                        <Bookmark className={`w-4 h-4 ${(bookmarks || []).some(b => b.targetType === 'CommunityPost' && b.targetId === post._id) ? 'text-brand-500 fill-brand-500' : 'text-slate-450 dark:text-slate-550'}`} />
+                        <span>Bookmark</span>
+                      </button>
                     </div>
 
-                    {/* Existing comments */}
+                    {/* Existing comments & replies */}
                     {post.comments && post.comments.length > 0 && (
-                      <div className="space-y-2 bg-slate-100/60 dark:bg-slate-900/40 border border-slate-200 dark:border-white/5 rounded-2xl p-3.5 max-h-[150px] overflow-y-auto">
+                      <div className="space-y-3 bg-slate-100/60 dark:bg-slate-900/40 border border-slate-200 dark:border-white/5 rounded-2xl p-3.5 max-h-[250px] overflow-y-auto no-scrollbar">
                         {post.comments.map((comment, index) => (
-                          <div key={index} className="text-[10px] leading-relaxed border-b border-slate-200 dark:border-white/5 last:border-0 pb-1.5 last:pb-0">
-                            <p className="font-bold text-slate-805 dark:text-slate-300">{comment.userName || 'Explorer'}:</p>
-                            <p className="text-slate-600 dark:text-slate-400">{comment.text}</p>
+                          <div key={index} className="text-[10px] leading-relaxed border-b border-slate-200 dark:border-white/5 last:border-0 pb-3 last:pb-0">
+                            <p className="font-bold text-slate-805 dark:text-slate-350">{comment.userName || 'Explorer'}:</p>
+                            <p className="text-slate-600 dark:text-slate-400 font-medium">{comment.text}</p>
+                            
+                            {/* Nested Replies Rendering */}
+                            {comment.replies && comment.replies.length > 0 && (
+                              <div className="pl-4 mt-2 space-y-1.5 border-l-2 border-brand-500/20">
+                                {comment.replies.map((reply, ridx) => (
+                                  <div key={ridx} className="text-[9px] bg-slate-200/40 dark:bg-white/5 p-2 rounded-xl border border-transparent dark:border-white/5">
+                                    <span className="font-extrabold text-slate-800 dark:text-slate-300">{reply.userName || 'Explorer'}: </span>
+                                    <span className="text-slate-555 dark:text-slate-400 font-semibold">{reply.text}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Reply Input Form */}
+                            <form 
+                              onSubmit={async (re) => {
+                                re.preventDefault();
+                                const replyInputEl = re.target.elements.replyText;
+                                const text = replyInputEl.value;
+                                if (!text || !text.trim()) return;
+                                try {
+                                  await api.post(`/comments/${comment._id}/reply`, { text });
+                                  replyInputEl.value = '';
+                                  refreshData();
+                                  triggerToast('Reply posted.', 'success');
+                                } catch(err) {
+                                  console.error(err);
+                                  triggerToast('Reply failed.', 'error');
+                                }
+                              }}
+                              className="mt-2 flex gap-1.5 items-center pl-2"
+                            >
+                              <input 
+                                type="text"
+                                name="replyText"
+                                placeholder="Reply to comment..."
+                                className="flex-grow bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-lg px-2.5 py-1 text-[9px] text-slate-800 dark:text-slate-200 focus:outline-none font-bold"
+                              />
+                              <button type="submit" className="bg-brand-500 text-white rounded-lg p-1.5 hover:bg-brand-650 transition-colors shadow flex items-center justify-center">
+                                <Send className="w-2.5 h-2.5" />
+                              </button>
+                            </form>
                           </div>
                         ))}
                       </div>
@@ -466,7 +562,7 @@ const Community = () => {
                         type="text"
                         value={commentInputs[post._id] || ''}
                         onChange={(e) => setCommentInputs({ ...commentInputs, [post._id]: e.target.value })}
-                        placeholder="Add helpful reply..."
+                        placeholder="Add helpful review..."
                         className="flex-1 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/10 focus:border-brand-500 focus:outline-none rounded-xl px-3.5 py-2 text-[10px] text-slate-800 dark:text-slate-200 font-semibold"
                       />
                       <button type="submit" className="bg-brand-600 hover:bg-brand-500 text-white p-2 rounded-xl flex items-center justify-center transition-all shadow-md">
@@ -477,6 +573,17 @@ const Community = () => {
                   </div>
                 );
               })
+            )}
+            
+            {filteredPosts.length > visibleCount && (
+              <div className="text-center pt-2">
+                <button
+                  onClick={() => setVisibleCount(prev => prev + 5)}
+                  className="px-6 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-all shadow-md cursor-pointer"
+                >
+                  Load More Travel Logs
+                </button>
+              </div>
             )}
           </div>
 

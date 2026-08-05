@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
-import { Compass, Sparkles, MapPin, Calendar, CreditCard, ChevronRight, Leaf, ShieldAlert, CheckSquare } from 'lucide-react';
+import { Compass, Sparkles, MapPin, Calendar, CreditCard, ChevronRight, Leaf, ShieldAlert, CheckSquare, Trash2 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { useTheme } from '../context/ThemeContext';
 
@@ -11,7 +11,7 @@ const groupOptions = ['Solo Traveler', 'Couple / Pair', 'Family Vacation', 'Frie
 const transportOptions = ['Walking & Rickshaw', 'Public Transport (Metro/Bus)', 'Private Cab / Self-Drive'];
 
 const TripPlanner = () => {
-  const { generateTripPlan, trips, triggerToast } = useApp();
+  const { generateTripPlan, trips, deleteTrip, triggerToast } = useApp();
   const { t } = useLanguage();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -50,7 +50,7 @@ const TripPlanner = () => {
         groupType,
         transportation
       });
-      setCurrentPlan(response);
+      setCurrentPlan(response.details || response.trip || response);
       triggerToast('AI Safety itinerary generated!', 'success');
     } catch (err) {
       console.error(err);
