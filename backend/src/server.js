@@ -79,6 +79,7 @@ app.use('/api/ai', require('./routes/ai'));
 app.use('/api/health', require('./routes/health'));
 app.use('/api/upload', require('./routes/upload'));
 app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/dispatches', require('./routes/dispatches'));
 
 app.get('/', (req, res) => {
   res.send('SafeTour AI Modular MERN Backend is Running!');

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const SOSRequest = require('../models/SOSRequest');
 const AuditLog = require('../models/AuditLog');
+const Dispatch = require('../models/Dispatch');
 const { authenticateToken } = require('../middlewares/auth');
 const { getIO } = require('../config/socket');
 
@@ -21,6 +22,18 @@ router.post('/', authenticateToken, async (req, res) => {
 
     const populated = await SOSRequest.findById(request._id)
       .populate('user', 'name phone email emergencyContacts');
+
+    // Automatically create individual dispatches for Police, Hospital, and Rescue sectors
+    try {
+      await Dispatch.insertMany([
+        { sosRequest: request._id, responderRole: 'police' },
+        { sosRequest: request._id, responderRole: 'hospital' },
+        { sosRequest: request._id, responderRole: 'rescue' }
+      ]);
+      console.log(`[Database] Seeded 3 dispatch targets for SOSRequest: ${request._id}`);
+    } catch (dispatchErr) {
+      console.error('[SOS Route] Failed to auto-create Dispatch records:', dispatchErr.message);
+    }
 
     // Broadcast emergency signal to admins, rescue teams, police, etc.
     const io = getIO();
