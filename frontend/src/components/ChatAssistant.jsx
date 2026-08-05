@@ -91,14 +91,16 @@ const ChatAssistant = () => {
   return (
     <>
       {/* Floating Toggle Button */}
-      <div className="pointer-events-auto">
-        <button
-          onClick={() => setIsOpen(true)}
-          className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:border-brand-500 text-slate-800 dark:text-white p-4 rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95 group flex items-center justify-center glow-purple"
-        >
-          <MessageSquare className="w-5 h-5 text-brand-500 group-hover:rotate-12 transition-transform" />
-        </button>
-      </div>
+      {!isOpen && (
+        <div className="pointer-events-auto">
+          <button
+            onClick={() => setIsOpen(true)}
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:border-brand-500 text-slate-800 dark:text-white p-4 rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95 group flex items-center justify-center glow-purple"
+          >
+            <MessageSquare className="w-5 h-5 text-brand-500 group-hover:rotate-12 transition-transform" />
+          </button>
+        </div>
+      )}
 
       {/* Chat Sidebar Drawer */}
       {isOpen && (
