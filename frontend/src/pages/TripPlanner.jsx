@@ -89,12 +89,13 @@ const TripPlanner = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        {/* Left column: Setup Form */}
-        <form onSubmit={handleSubmit} className="lg:col-span-5 glass border border-slate-200 dark:border-white/10 p-6 rounded-3xl space-y-6 shadow-xl relative">
-          <h3 className="font-extrabold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5 border-b border-slate-200 dark:border-white/5 pb-2">
-            <Compass className="w-4 h-4 text-brand-500" />
-            {t("tripPlanner.title")}
-          </h3>
+        {/* Left column: Setup Form & History */}
+        <div className="lg:col-span-5 space-y-6">
+          <form onSubmit={handleSubmit} className="glass border border-slate-200 dark:border-white/10 p-6 rounded-3xl space-y-6 shadow-xl relative w-full">
+            <h3 className="font-extrabold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5 border-b border-slate-200 dark:border-white/5 pb-2">
+              <Compass className="w-4 h-4 text-brand-500" />
+              {t("tripPlanner.title")}
+            </h3>
 
           {/* Destination & Duration */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -213,6 +214,36 @@ const TripPlanner = () => {
             {loading ? t("tripPlanner.generating") : t("tripPlanner.generateBtn")}
           </button>
         </form>
+
+        {/* History Panel */}
+        {trips && trips.length > 0 && (
+          <div className="glass border border-slate-200 dark:border-white/10 p-6 rounded-3xl space-y-4 shadow-xl w-full">
+            <h3 className="font-extrabold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/5 pb-2 flex items-center gap-2">
+              📂 Saved Safe Itineraries ({trips.length})
+            </h3>
+            <div className="space-y-3 max-h-48 overflow-y-auto pr-1 no-scrollbar">
+              {trips.map(t => (
+                <div key={t._id} className="flex justify-between items-center bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/5 p-3 rounded-2xl">
+                  <button 
+                    type="button"
+                    onClick={() => setCurrentPlan(t)}
+                    className="text-left font-bold text-xs text-slate-805 dark:text-slate-200 hover:text-brand-500 transition-colors flex-grow cursor-pointer truncate mr-2 bg-transparent border-0"
+                  >
+                    🗺️ {t.destination} ({t.days} Days)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => deleteTrip(t._id)}
+                    className="p-1.5 text-slate-450 hover:text-red-500 transition-colors cursor-pointer shrink-0"
+                  >
+                    <Trash2 className="w-4.5 h-4.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
 
         {/* Right column: Itinerary Display Output */}
         <div className="lg:col-span-7 space-y-6">
