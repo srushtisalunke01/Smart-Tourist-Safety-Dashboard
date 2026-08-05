@@ -18,6 +18,9 @@ const Community = () => {
   
   const [editingPostId, setEditingPostId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState('All');
+  const [minSafetyRating, setMinSafetyRating] = useState('All');
+  const [visibleCount, setVisibleCount] = useState(5);
   const [commentInputs, setCommentInputs] = useState({});
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
@@ -138,12 +141,17 @@ const Community = () => {
 
   const filteredPosts = (posts || []).filter(post => {
     const query = searchQuery.toLowerCase();
-    return (
+    const matchesSearch = !query || (
       post.title?.toLowerCase().includes(query) ||
       post.content?.toLowerCase().includes(query) ||
       post.location?.toLowerCase().includes(query) ||
       post.user?.name?.toLowerCase().includes(query)
     );
+    const matchesLocation = selectedLocation === 'All' || 
+      (post.location && post.location.toLowerCase().includes(selectedLocation.toLowerCase()));
+    const matchesRating = minSafetyRating === 'All' || 
+      (post.safetyRating && post.safetyRating >= Number(minSafetyRating));
+    return matchesSearch && matchesLocation && matchesRating;
   });
 
   return (
