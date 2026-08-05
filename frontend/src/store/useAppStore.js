@@ -228,6 +228,13 @@ export const useAppStore = create((set, get) => ({
           const sosRes = await api.get('/sos/active');
           set({ activeSOS: sosRes.data });
           
+          try {
+            const telemetryRes = await api.get('/telemetry/locations');
+            set({ touristLocations: telemetryRes.data });
+          } catch (teleErr) {
+            console.error('Telemetry locations fetch failed', teleErr);
+          }
+          
           if (normalizedRole !== 'ADMIN') {
             await get().fetchActiveDispatches(token);
           }

@@ -46,7 +46,7 @@ export default function AdminDashboard() {
   const { token, user } = useAuthStore();
   const { 
     scams, activeSOS, resolveSOS, verifyScamReport, 
-    submitAlert, submitSafetyZone, triggerToast, zones, language 
+    submitAlert, submitSafetyZone, triggerToast, zones, language, touristLocations
   } = useAppStore();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -87,17 +87,39 @@ export default function AdminDashboard() {
 
   // Real-time tourist dataset
   const touristsData = useMemo(() => {
-    const list = [
-      { id: 'T101', name: 'Arjun Sharma', status: 'safe', lat: 28.6012, lng: 77.2183, phone: '+91 98210 12345', relationship: 'Sister - +91 98210 54321', safetyScore: 92, age: 24, country: 'India', battery: 88, signal: 4, route: 'Lodhi Gardens -> Khan Market', group: 'India Group A' },
-      { id: 'T102', name: 'Sarah Jenkins', status: 'warning', lat: 15.5553, lng: 73.7535, phone: '+44 7911 223344', relationship: 'Friend - +44 7911 556677', safetyScore: 62, age: 29, country: 'United Kingdom', battery: 52, signal: 3, route: 'Anjuna Beach -> Vagator Fort', group: 'West Goa Tour' },
-      { id: 'T103', name: 'Amit Das', status: 'sos', lat: 26.9124, lng: 75.7873, phone: '+91 91234 56789', relationship: 'Father - +91 98888 77777', safetyScore: 24, age: 31, country: 'India', battery: 15, signal: 1, route: 'Hawa Mahal -> Amber Palace', group: 'Jaipur Solo Trek' }
-    ];
+    const list = (touristLocations || []).map(loc => {
+      const userObj = loc.user || {};
+      const profile = userObj.touristProfile || {};
+      return {
+        id: loc._id || loc.id,
+        name: userObj.name || 'Explorer',
+        status: loc.status ? loc.status.toLowerCase() : 'safe',
+        lat: loc.lat,
+        lng: loc.lng,
+        phone: userObj.phone || 'N/A',
+        relationship: 'Guardian Active Stream',
+        safetyScore: profile.safetyScore || 90,
+        age: profile.age || 25,
+        country: profile.nationality || 'Explorer',
+        battery: loc.battery || 95,
+        signal: loc.signal || 4,
+        route: 'Active Tracking Route',
+        group: 'Global SafeTour Group'
+      };
+    });
+
+    if (list.length === 0) {
+      list.push(
+        { id: 'T101', name: 'Arjun Sharma', status: 'safe', lat: 28.6012, lng: 77.2183, phone: '+91 98210 12345', relationship: 'Sister - +91 98210 54321', safetyScore: 92, age: 24, country: 'India', battery: 88, signal: 4, route: 'Lodhi Gardens -> Khan Market', group: 'India Group A' },
+        { id: 'T102', name: 'Sarah Jenkins', status: 'warning', lat: 15.5553, lng: 73.7535, phone: '+44 7911 223344', relationship: 'Friend - +44 7911 556677', safetyScore: 62, age: 29, country: 'United Kingdom', battery: 52, signal: 3, route: 'Anjuna Beach -> Vagator Fort', group: 'West Goa Tour' }
+      );
+    }
 
     activeSOS.forEach((sos) => {
-      const name = sos.user?.name || `Explorer Beacon #${sos.id.slice(-4)}`;
+      const name = sos.user?.name || `Explorer Beacon #${(sos._id || sos.id).slice(-4)}`;
       if (!list.some(l => l.name === name)) {
         list.push({
-          id: sos.id,
+          id: sos._id || sos.id,
           name: name,
           status: 'sos',
           lat: sos.lat || 28.5245,
@@ -116,7 +138,7 @@ export default function AdminDashboard() {
     });
 
     return list;
-  }, [activeSOS]);
+  }, [touristLocations, activeSOS]);
 
   // Integrated incident alerts list feed
   const alertFeed = useMemo(() => {

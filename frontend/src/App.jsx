@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -12,20 +12,20 @@ import { AuthProvider } from './context/AuthContext';
 import { useAuthStore } from './store/useAuthStore';
 import { useAppStore } from './store/useAppStore';
 
-// Pages
-import Landing from './pages/Landing';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import TouristDashboard from './pages/TouristDashboard';
-import TripPlanner from './pages/TripPlanner';
-import WomenSafety from './pages/WomenSafety';
-import ScamRadar from './pages/ScamRadar';
-import Community from './pages/Community';
-import OfflineDashboard from './pages/OfflineDashboard';
-import AdminDashboard from './pages/AdminDashboard';
-import PoliceDashboard from './pages/PoliceDashboard';
-import HospitalDashboard from './pages/HospitalDashboard';
-import RescueDashboard from './pages/RescueDashboard';
+// Lazy-loaded Pages
+const Landing = lazy(() => import('./pages/Landing'));
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const TouristDashboard = lazy(() => import('./pages/TouristDashboard'));
+const TripPlanner = lazy(() => import('./pages/TripPlanner'));
+const WomenSafety = lazy(() => import('./pages/WomenSafety'));
+const ScamRadar = lazy(() => import('./pages/ScamRadar'));
+const Community = lazy(() => import('./pages/Community'));
+const OfflineDashboard = lazy(() => import('./pages/OfflineDashboard'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const PoliceDashboard = lazy(() => import('./pages/PoliceDashboard'));
+const HospitalDashboard = lazy(() => import('./pages/HospitalDashboard'));
+const RescueDashboard = lazy(() => import('./pages/RescueDashboard'));
 
 // Components
 import Navbar from './components/Navbar';
@@ -105,45 +105,51 @@ const AppContent = () => {
       <Navbar />
       
       <main className="flex-grow" style={{ paddingTop: 'var(--navbar-height, 68px)' }}>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          
-          <Route path="/dashboard" element={<DashboardSelector />} />
-          
-          <Route path="/planner" element={
-            <ProtectedRoute>
-              <TripPlanner />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/women-safety" element={
-            <ProtectedRoute>
-              <WomenSafety />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/scam-radar" element={
-            <ProtectedRoute>
-              <ScamRadar />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/community" element={
-            <ProtectedRoute>
-              <Community />
-            </ProtectedRoute>
-          } />
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-[50vh]">
+            <div className="w-10 h-10 rounded-full border-4 border-brand-500 border-t-transparent animate-spin"></div>
+          </div>
+        }>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            
+            <Route path="/dashboard" element={<DashboardSelector />} />
+            
+            <Route path="/planner" element={
+              <ProtectedRoute>
+                <TripPlanner />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/women-safety" element={
+              <ProtectedRoute>
+                <WomenSafety />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/scam-radar" element={
+              <ProtectedRoute>
+                <ScamRadar />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/community" element={
+              <ProtectedRoute>
+                <Community />
+              </ProtectedRoute>
+            } />
 
-          <Route path="/offline" element={
-            <ProtectedRoute>
-              <OfflineDashboard />
-            </ProtectedRoute>
-          } />
+            <Route path="/offline" element={
+              <ProtectedRoute>
+                <OfflineDashboard />
+              </ProtectedRoute>
+            } />
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </main>
 
       {/* Floating emergency widgets for logged in users */}
