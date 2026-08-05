@@ -82,6 +82,16 @@ export default function MapComponent({ center = [26.9239, 75.8267], zoom = 14 })
     }
   }, []);
 
+  // Handle map container responsive resize
+  useEffect(() => {
+    if (!map || !mapContainerRef.current) return;
+    const resizeObserver = new ResizeObserver(() => {
+      map.invalidateSize();
+    });
+    resizeObserver.observe(mapContainerRef.current);
+    return () => resizeObserver.disconnect();
+  }, [map]);
+
   // Update map tiles
   useEffect(() => {
     if (!map) return;
