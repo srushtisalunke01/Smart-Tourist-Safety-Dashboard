@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { MessageSquare, Heart, Star, Sparkles, Plus, MapPin, Award, CheckCircle, Send, Edit, Trash2, Search, Upload } from 'lucide-react';
+import { MessageSquare, Heart, Star, Sparkles, Plus, MapPin, Award, CheckCircle, Send, Edit, Trash2, Search, Upload, Bookmark } from 'lucide-react';
 import api from '../services/api';
 
 const Community = () => {
-  const { posts, submitCommunityPost, likePost, commentOnPost, deleteCommunityPost, editCommunityPost, triggerToast } = useApp();
+  const { posts, submitCommunityPost, likePost, commentOnPost, deleteCommunityPost, editCommunityPost, bookmarks, addBookmark, removeBookmark, refreshData, triggerToast } = useApp();
   const { user } = useAuth();
   const { t } = useLanguage();
 
