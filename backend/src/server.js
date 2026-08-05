@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser');
+const { mongoSanitize, xssSanitize } = require('./middlewares/security');
 
 const connectDB = require('./config/db');
 const { initSocket } = require('./config/socket');
