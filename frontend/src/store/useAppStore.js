@@ -450,6 +450,39 @@ export const useAppStore = create((set, get) => ({
     } catch (err) {
       console.error('[Offline Cache Store Error]', err);
     }
+  },
+
+  addBookmark: async (token, targetType, targetId) => {
+    try {
+      const response = await api.post('/bookmarks', { targetType, targetId });
+      set(state => ({ bookmarks: [...state.bookmarks, response.data] }));
+      get().triggerToast('Added to bookmarks.', 'success');
+      return response.data;
+    } catch (err) {
+      console.error('[Bookmark Store Error]', err);
+    }
+  },
+
+  removeBookmark: async (token, targetType, targetId) => {
+    try {
+      await api.post('/bookmarks/remove', { targetType, targetId });
+      set(state => ({
+        bookmarks: state.bookmarks.filter(b => !(b.targetType === targetType && b.targetId === targetId))
+      }));
+      get().triggerToast('Removed from bookmarks.', 'info');
+    } catch (err) {
+      console.error('[Bookmark Store Error]', err);
+    }
+  },
+
+  deleteTrip: async (token, tripId) => {
+    try {
+      await api.delete(`/trips/${tripId}`);
+      set(state => ({ trips: state.trips.filter(t => t._id !== tripId) }));
+      get().triggerToast('Trip plan deleted successfully.', 'info');
+    } catch (err) {
+      console.error('[Trip Store Error]', err);
+    }
   }
 }));
 

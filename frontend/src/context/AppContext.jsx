@@ -33,6 +33,9 @@ export const AppProvider = ({ children }) => {
     editCommunityPost: (postId, postData) => store.editCommunityPost(token, postId, postData),
     downloadOfflineCache: (packageId, packageName, packageSize) => store.downloadOfflineCache(token, packageId, packageName, packageSize),
     clearOfflineCache: (packageId) => store.clearOfflineCache(token, packageId),
+    addBookmark: (targetType, targetId) => store.addBookmark(token, targetType, targetId),
+    removeBookmark: (targetType, targetId) => store.removeBookmark(token, targetType, targetId),
+    deleteTrip: (tripId) => store.deleteTrip(token, tripId),
     refreshData: () => store.fetchData(token, user?.role)
   };
 
