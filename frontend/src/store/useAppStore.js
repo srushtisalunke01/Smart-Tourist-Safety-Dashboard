@@ -17,6 +17,7 @@ export const useAppStore = create((set, get) => ({
   socket: null,
   notifications: [],
   offlineCache: [],
+  bookmarks: [],
   isChatExpanded: false,
 
   triggerToast: (message, type = 'info') => {
@@ -199,6 +200,13 @@ export const useAppStore = create((set, get) => ({
           set({ offlineCache: cacheRes.data });
         } catch (cacheErr) {
           console.error('Failed to fetch offline cache', cacheErr);
+        }
+
+        try {
+          const bookmarksRes = await api.get('/bookmarks');
+          set({ bookmarks: bookmarksRes.data });
+        } catch (bookmarkErr) {
+          console.error('Failed to fetch bookmarks', bookmarkErr);
         }
 
         const normalizedRole = role ? role.toUpperCase() : '';
