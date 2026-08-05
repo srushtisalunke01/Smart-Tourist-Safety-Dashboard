@@ -1,27 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useAppStore } from '../store/useAppStore';
 import { useLanguage } from '../context/LanguageContext';
 import MapComponent from '../components/MapComponent';
+import api from '../services/api';
 import { 
   Shield, AlertCircle, Trash2, 
   HeartHandshake, Search, CheckCircle, Navigation
 } from 'lucide-react';
 
 const destinationsDb = [
-  { name: "Jaipur", temp: "36°C", condition: "Dry & Clear", score: 72, advisory: "Watch out for persistent street vendors and fake guide scams.", risk: "Moderate Risk" },
-  { name: "Delhi", temp: "38°C", condition: "Sunny", score: 92, advisory: "Highly secure embassy lanes. Keep bags zipped in local bazaars.", risk: "Safe" },
-  { name: "Goa", temp: "30°C", condition: "Overcast", score: 84, advisory: "Pay attention to tide warning flags; avoid dark beaches at night.", risk: "Safe" },
-  { name: "Mumbai", temp: "29°C", condition: "Monsoon", score: 88, advisory: "Safe tourist stretch. Always ride prepaid meter taxis.", risk: "Safe" }
+  { name: "Jaipur", temp: "36°C", condition: "Dry & Clear", safetyScore: 72, advisory: "Watch out for persistent street vendors and fake guide scams.", riskLevel: "Moderate Risk" },
+  { name: "Delhi", temp: "38°C", condition: "Sunny", safetyScore: 92, advisory: "Highly secure embassy lanes. Keep bags zipped in local bazaars.", riskLevel: "Safe" },
+  { name: "Goa", temp: "30°C", condition: "Overcast", safetyScore: 84, advisory: "Pay attention to tide warning flags; avoid dark beaches at night.", riskLevel: "Safe" },
+  { name: "Mumbai", temp: "29°C", condition: "Monsoon", safetyScore: 88, advisory: "Safe tourist stretch. Always ride prepaid meter taxis.", riskLevel: "Safe" }
 ];
 
 export default function TouristDashboard() {
-  const { user, token, updateEmergencyContacts } = useAuthStore();
+  const { user, token, updateEmergencyContacts, verifyBlockchainID } = useAuthStore();
   const { triggerSOS, submitScamReport, zones, alerts, triggerToast } = useAppStore();
   const { t } = useLanguage();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [destinations, setDestinations] = useState(destinationsDb);
   const [selectedDest, setSelectedDest] = useState(destinationsDb[0]);
+
+  useEffect(() => {
+    api.get('/tourist-reports')
+      .then(res => {
+        if (res.data && res.data.length > 0) {
+          const mapped = res.data.map(d => ({
+            ...d,
+            score: d.safetyScore,
+            risk: d.riskLevel
+          }));
+          setDestinations(mapped);
+          setSelectedDest(mapped[0]);
+        }
+      })
+      .catch(err => console.error('[TouristDashboard] Safety indexes fetch failed, using fallbacks.', err));
+  }, []);
 
   // Contact form
   const [newContactName, setNewContactName] = useState('');
@@ -37,7 +55,7 @@ export default function TouristDashboard() {
 
   // Blockchain Identity states
   const [isGeneratingBlock, setIsGeneratingBlock] = useState(false);
-  const [blockchainRecord, setBlockchainRecord] = useState(user?.touristProfile?.blockchainID || null);
+  const blockchainRecord = user?.touristProfile?.blockchainID || null;
 
   const handleSOS = async () => {
     if (navigator.geolocation) {
@@ -114,24 +132,20 @@ export default function TouristDashboard() {
     }
   };
 
-  const generateBlockchainID = () => {
+  const generateBlockchainID = async () => {
     setIsGeneratingBlock(true);
-    setTimeout(() => {
-      const mockHash = '0x' + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('');
-      const mockTx = '0x' + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('');
-      setBlockchainRecord({
-        userHash: mockHash,
-        blockNumber: Math.floor(Math.random() * 500000) + 19000000,
-        transactionHash: mockTx,
-        verifiedAt: new Date().toISOString()
-      });
+    try {
+      await verifyBlockchainID(user?.touristProfile?.nationality || 'Explorer');
+      triggerToast('Blockchain ID verification generated and synced with database!', 'success');
+    } catch (err) {
+      triggerToast('Failed to secure blockchain transaction on backend', 'critical');
+    } finally {
       setIsGeneratingBlock(false);
-      triggerToast('Simulated blockchain ID verification generated!', 'success');
-    }, 2000);
+    }
   };
 
   const handleSearch = () => {
-    const found = destinationsDb.find(d => d.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    const found = destinations.find(d => d.name.toLowerCase().includes(searchQuery.toLowerCase()));
     if (found) setSelectedDest(found);
     else triggerToast('Destination index not found. Searching nearby...', 'info');
   };

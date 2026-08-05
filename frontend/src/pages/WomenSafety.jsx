@@ -3,6 +3,7 @@ import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import { ShieldAlert, HeartHandshake, Phone, Share2, Clipboard, Navigation, CheckCircle, Info } from 'lucide-react';
 import MapComponent from '../components/MapComponent';
+import api from '../services/api';
 
 const WomenSafety = () => {
   const { triggerToast } = useApp();
@@ -10,8 +11,45 @@ const WomenSafety = () => {
   const [familyTrackingActive, setFamilyTrackingActive] = useState(false);
   const trackingLink = `http://localhost:3000/track/tourist-${Math.floor(100000 + Math.random() * 900000)}`;
 
-  const handleSilentSos = () => {
-    triggerToast('🤫 Silent SOS Dispatched! Sending coordinates to nearby security patrols.', 'critical');
+  useEffect(() => {
+    api.get('/women-safety')
+      .then(res => {
+        if (res.data && res.data.familyTracking) {
+          setFamilyTrackingActive(res.data.familyTracking.active);
+        }
+      })
+      .catch(err => console.error('[WomenSafety] Load error:', err));
+  }, []);
+
+  const handleSilentSos = async () => {
+    const triggerCall = async (lat, lng) => {
+      try {
+        await api.post('/women-safety/silent-sos', { lat, lng });
+        triggerToast('🤫 Silent SOS Dispatched! Coordinates logged to MERN security database.', 'critical');
+      } catch (err) {
+        triggerToast('Silent SOS coordinates logging failed on backend.', 'critical');
+      }
+    };
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => triggerCall(pos.coords.latitude, pos.coords.longitude),
+        () => triggerCall(28.6012, 77.2183)
+      );
+    } else {
+      await triggerCall(28.6012, 77.2183);
+    }
+  };
+
+  const toggleFamilyTracking = async () => {
+    const nextVal = !familyTrackingActive;
+    try {
+      await api.post('/women-safety/tracking', { active: nextVal });
+      setFamilyTrackingActive(nextVal);
+      triggerToast(nextVal ? 'Secure family tracking link active!' : 'Family tracking link disabled.', 'success');
+    } catch (err) {
+      triggerToast('Tracking status toggle failed.', 'critical');
+    }
   };
 
   const copyTrackingLink = () => {
@@ -90,7 +128,7 @@ const WomenSafety = () => {
 
               <div className="flex gap-2">
                 <button
-                  onClick={() => setFamilyTrackingActive(!familyTrackingActive)}
+                  onClick={toggleFamilyTracking}
                   className={`flex-1 py-2.5 rounded-xl border text-[10px] font-extrabold transition-all cursor-pointer ${
                     familyTrackingActive 
                     ? 'bg-safe-500/15 border-safe-500 text-safe-600 dark:text-safe-400 shadow-md' 

@@ -11,13 +11,12 @@ const offlineGuides = [
 
 const OfflineDashboard = () => {
   const { t } = useLanguage();
-  const { triggerToast } = useApp();
-
-  const [downloaded, setDownloaded] = useState(() => {
-    const saved = localStorage.getItem('safetour_offline_guides');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const { offlineCache, downloadOfflineCache, clearOfflineCache, triggerToast } = useApp();
   
+  const downloaded = (offlineCache || [])
+    .filter(c => c.status === 'downloaded')
+    .map(c => c.packageId);
+
   const [downloading, setDownloading] = useState({});
 
   const handleDownload = (id) => {
@@ -25,9 +24,11 @@ const OfflineDashboard = () => {
 
     setDownloading(prev => ({ ...prev, [id]: 0 }));
 
+    const guide = offlineGuides.find(g => g.id === id) || { name: 'Offline Guide', size: '2.0 MB' };
+
     // Simulate progress bar increments
     let progress = 0;
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       progress += 10;
       setDownloading(prev => ({ ...prev, [id]: progress }));
       
@@ -39,19 +40,23 @@ const OfflineDashboard = () => {
           return next;
         });
         
-        const nextDownloaded = [...downloaded, id];
-        setDownloaded(nextDownloaded);
-        localStorage.setItem('safetour_offline_guides', JSON.stringify(nextDownloaded));
-        triggerToast('Offline packet cached securely in LocalStorage!', 'success');
+        try {
+          await downloadOfflineCache(id, guide.name, guide.size);
+          triggerToast('Offline packet cached securely in MongoDB database!', 'success');
+        } catch (err) {
+          triggerToast('Failed to save offline package cache', 'error');
+        }
       }
     }, 150);
   };
 
-  const handleRemove = (id) => {
-    const nextDownloaded = downloaded.filter(i => i !== id);
-    setDownloaded(nextDownloaded);
-    localStorage.setItem('safetour_offline_guides', JSON.stringify(nextDownloaded));
-    triggerToast('Offline cache cleared.', 'info');
+  const handleRemove = async (id) => {
+    try {
+      await clearOfflineCache(id);
+      triggerToast('Offline cache cleared from MongoDB.', 'info');
+    } catch (err) {
+      triggerToast('Failed to clear cache', 'error');
+    }
   };
 
   return (

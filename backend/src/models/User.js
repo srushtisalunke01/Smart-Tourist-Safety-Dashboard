@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['tourist', 'admin', 'police', 'hospital', 'rescue'],
+    enum: ['tourist', 'admin', 'police', 'hospital', 'rescue', 'moderator'],
     default: 'tourist'
   },
   emergencyContacts: [
@@ -34,6 +34,28 @@ const UserSchema = new mongoose.Schema({
       lng: Number
     }
   ],
+  touristProfile: {
+    nationality: String,
+    blockchainID: {
+      userHash: String,
+      transactionHash: String,
+      blockNumber: Number,
+      verifiedAt: String
+    }
+  },
+  policeProfile: {
+    stationName: String,
+    badgeNumber: String
+  },
+  hospitalProfile: {
+    hospitalName: String,
+    address: String,
+    contactNumber: String
+  },
+  rescueProfile: {
+    teamName: String,
+    specialty: String
+  },
   createdAt: {
     type: Date,
     default: Date.now

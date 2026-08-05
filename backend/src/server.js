@@ -81,9 +81,27 @@ app.use('/api/upload', require('./routes/upload'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/dispatches', require('./routes/dispatches'));
 
+// New audit routes
+app.use('/api/users', require('./routes/users'));
+app.use('/api/profiles', require('./routes/profiles'));
+app.use('/api/saved-trips', require('./routes/savedTrips'));
+app.use('/api/comments', require('./routes/comments'));
+app.use('/api/likes', require('./routes/likes'));
+app.use('/api/women-safety', require('./routes/womenSafety'));
+app.use('/api/tourist-reports', require('./routes/touristReports'));
+app.use('/api/offline-cache', require('./routes/offlineCache'));
+app.use('/api/settings', require('./routes/settings'));
+app.use('/api/bookmarks', require('./routes/bookmarks'));
+app.use('/api/activity', require('./routes/activityHistory'));
+app.use('/api/feedback', require('./routes/feedback'));
+app.use('/api/telemetry', require('./routes/telemetry'));
+
 app.get('/', (req, res) => {
   res.send('SafeTour AI Modular MERN Backend is Running!');
 });
+
+// Centralized Error Handler
+app.use(require('./middlewares/errorHandler'));
 
 // Database Seeder
 async function seedDatabase() {

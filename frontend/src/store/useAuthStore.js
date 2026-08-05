@@ -108,6 +108,18 @@ export const useAuthStore = create((set, get) => ({
       const errMsg = err.response?.data?.message || err.message || 'Failed to update contacts';
       throw new Error(errMsg);
     }
+  },
+
+  verifyBlockchainID: async (nationality) => {
+    try {
+      const response = await api.post('/profiles/blockchain-verify', { nationality });
+      set({ user: normalizeUser(response.data.user) });
+      return response.data.blockchainRecord;
+    } catch (err) {
+      console.error(err);
+      const errMsg = err.response?.data?.message || err.message || 'Failed blockchain validation';
+      throw new Error(errMsg);
+    }
   }
 }));
 

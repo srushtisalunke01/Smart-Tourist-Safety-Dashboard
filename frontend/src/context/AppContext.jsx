@@ -31,6 +31,8 @@ export const AppProvider = ({ children }) => {
     commentOnPost: (postId, text) => store.commentOnPost(token, postId, text),
     deleteCommunityPost: (postId) => store.deleteCommunityPost(token, postId),
     editCommunityPost: (postId, postData) => store.editCommunityPost(token, postId, postData),
+    downloadOfflineCache: (packageId, packageName, packageSize) => store.downloadOfflineCache(token, packageId, packageName, packageSize),
+    clearOfflineCache: (packageId) => store.clearOfflineCache(token, packageId),
     refreshData: () => store.fetchData(token, user?.role)
   };
 

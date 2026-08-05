@@ -16,6 +16,7 @@ export const useAppStore = create((set, get) => ({
   language: localStorage.getItem('language') || 'en',
   socket: null,
   notifications: [],
+  offlineCache: [],
   isChatExpanded: false,
 
   triggerToast: (message, type = 'info') => {
@@ -191,6 +192,13 @@ export const useAppStore = create((set, get) => ({
           set({ notifications: notificationsRes.data });
         } catch (notifErr) {
           console.error('Failed to fetch notifications', notifErr);
+        }
+
+        try {
+          const cacheRes = await api.get('/offline-cache');
+          set({ offlineCache: cacheRes.data });
+        } catch (cacheErr) {
+          console.error('Failed to fetch offline cache', cacheErr);
         }
 
         const normalizedRole = role ? role.toUpperCase() : '';
@@ -410,6 +418,29 @@ export const useAppStore = create((set, get) => ({
       }));
     } catch (err) {
       console.error('[Notification Store Error]', err);
+    }
+  },
+
+  downloadOfflineCache: async (token, packageId, packageName, packageSize) => {
+    try {
+      const response = await api.post('/offline-cache', { packageId, packageName, packageSize });
+      set(state => ({
+        offlineCache: [...state.offlineCache.filter(c => c.packageId !== packageId), response.data]
+      }));
+      return response.data;
+    } catch (err) {
+      console.error('[Offline Cache Store Error]', err);
+    }
+  },
+
+  clearOfflineCache: async (token, packageId) => {
+    try {
+      await api.post('/offline-cache/clear', { packageId });
+      set(state => ({
+        offlineCache: state.offlineCache.filter(c => c.packageId !== packageId)
+      }));
+    } catch (err) {
+      console.error('[Offline Cache Store Error]', err);
     }
   }
 }));
