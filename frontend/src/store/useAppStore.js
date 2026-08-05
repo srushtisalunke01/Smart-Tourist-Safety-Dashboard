@@ -18,6 +18,7 @@ export const useAppStore = create((set, get) => ({
   notifications: [],
   offlineCache: [],
   bookmarks: [],
+  touristLocations: [],
   isChatExpanded: false,
 
   triggerToast: (message, type = 'info') => {
@@ -127,6 +128,19 @@ export const useAppStore = create((set, get) => ({
           activeDispatches: state.activeDispatches.map(d => (d.id === updatedDispatch.id || d._id === updatedDispatch._id) ? { ...d, status: updatedDispatch.status } : d)
         }));
       }
+    });
+
+    socket.on('location_update', (data) => {
+      set(state => {
+        const existIdx = state.touristLocations.findIndex(l => l.user === data.userId || l.user?._id === data.userId);
+        if (existIdx !== -1) {
+          const updated = [...state.touristLocations];
+          updated[existIdx] = { ...updated[existIdx], lat: data.lat, lng: data.lng, timestamp: new Date() };
+          return { touristLocations: updated };
+        } else {
+          return { touristLocations: [...state.touristLocations, { user: { _id: data.userId, name: data.name }, lat: data.lat, lng: data.lng, timestamp: new Date() }] };
+        }
+      });
     });
 
     socket.on('community_post_created', (newPost) => {
