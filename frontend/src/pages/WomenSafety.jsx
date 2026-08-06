@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import { ShieldAlert, HeartHandshake, Phone, Share2, Clipboard, Navigation, CheckCircle, Info } from 'lucide-react';
 import MapComponent from '../components/MapComponent';
 import api from '../services/api';
+
 
 const WomenSafety = () => {
   const { triggerToast } = useApp();

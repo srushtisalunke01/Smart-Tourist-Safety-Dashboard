@@ -10,6 +10,21 @@ class NotificationController {
     }
   }
 
+  async createNotification(req, res, next) {
+    try {
+      const notif = await notificationService.createNotification({
+        userId: req.body.userId || req.user.id,
+        title: req.body.title,
+        message: req.body.message,
+        type: req.body.type || 'INFO'
+      });
+      res.status(201).json(notif);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+
   async markAsRead(req, res, next) {
     try {
       const notif = await notificationService.markAsRead(req.params.id, req.user.id);
