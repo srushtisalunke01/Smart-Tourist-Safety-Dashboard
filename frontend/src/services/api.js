@@ -26,12 +26,13 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // If unauthorized, token might be expired
-    if (error.response && error.response.status === 401) {
-      console.warn('Unauthorized access detected. Token might be expired.');
+    // If unauthorized or forbidden token error, notify
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      console.warn('Unauthorized/Expired token detected:', error.response.data?.message || 'Session expired');
     }
     return Promise.reject(error);
   }
 );
+
 
 export default api;

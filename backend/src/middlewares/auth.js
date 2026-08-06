@@ -11,11 +11,12 @@ const authenticateToken = (req, res, next) => {
   const secret = process.env.JWT_SECRET || 'safetour_secret_key_12345';
   jwt.verify(token, secret, (err, user) => {
     if (err) {
-      return res.status(403).json({ message: 'Invalid or expired token' });
+      return res.status(401).json({ message: 'Invalid or expired token' });
     }
     req.user = user;
     next();
   });
+
 };
 
 const requireRole = (allowedRoles) => {

@@ -26,20 +26,35 @@ export default function TouristDashboard() {
   const [selectedDest, setSelectedDest] = useState(destinationsDb[0]);
 
   useEffect(() => {
-    api.get('/tourist-reports')
-      .then(res => {
-        if (res.data && res.data.length > 0) {
-          const mapped = res.data.map(d => ({
-            ...d,
-            score: d.safetyScore,
-            risk: d.riskLevel
-          }));
-          setDestinations(mapped);
-          setSelectedDest(mapped[0]);
-        }
-      })
-      .catch(err => console.error('[TouristDashboard] Safety indexes fetch failed, using fallbacks.', err));
+    Promise.all([
+      api.get('/zones'),
+      api.get('/tourist-reports')
+    ]).then(([zonesRes, reportsRes]) => {
+      const combined = [
+        ...(zonesRes.data || []).map(z => ({
+          name: z.name,
+          temp: "30°C",
+          condition: "Monitored",
+          safetyScore: z.safetyScore || 80,
+          advisory: z.advisory || "Stay alert",
+          riskLevel: z.riskLevel || "Safe"
+        })),
+        ...(reportsRes.data || []).map(d => ({
+          name: d.name,
+          temp: d.temp || "28°C",
+          condition: d.condition || "Clear",
+          safetyScore: d.safetyScore || d.score || 85,
+          advisory: d.advisory || "Normal safety advisory",
+          riskLevel: d.riskLevel || d.risk || "Safe"
+        }))
+      ];
+      if (combined.length > 0) {
+        setDestinations(combined);
+        setSelectedDest(combined[0]);
+      }
+    }).catch(err => console.error('[TouristDashboard] Safety indexes fetch failed:', err));
   }, []);
+
 
   // Contact form
   const [newContactName, setNewContactName] = useState('');
