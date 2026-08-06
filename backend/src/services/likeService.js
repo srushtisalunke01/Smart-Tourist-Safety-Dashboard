@@ -19,6 +19,11 @@ class LikeService {
       return { liked: true };
     }
   }
+
+  async deleteLike(id) {
+    return likeRepository.delete(id);
+  }
 }
 
 module.exports = new LikeService();
+

@@ -18,6 +18,16 @@ class LikeController {
       next(err);
     }
   }
+
+  async deleteLike(req, res, next) {
+    try {
+      await likeService.deleteLike(req.params.id);
+      res.json({ message: 'Like removed successfully' });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = new LikeController();
+

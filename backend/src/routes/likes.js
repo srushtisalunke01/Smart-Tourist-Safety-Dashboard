@@ -5,5 +5,7 @@ const { authenticateToken } = require('../middlewares/auth');
 
 router.get('/', authenticateToken, likeController.getAllLikes);
 router.post('/', authenticateToken, likeController.toggleLike);
+router.delete('/:id', authenticateToken, likeController.deleteLike);
 
 module.exports = router;
+
