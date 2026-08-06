@@ -19,6 +19,11 @@ const UserSchema = new mongoose.Schema({
     enum: ['tourist', 'admin', 'police', 'hospital', 'rescue', 'moderator'],
     default: 'tourist'
   },
+  emailVerified: {
+    type: Boolean,
+    default: false
+  },
+
   emergencyContacts: [
     {
       name: { type: String, required: true },
