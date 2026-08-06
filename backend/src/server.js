@@ -36,28 +36,33 @@ initEmailWorker();
 
 // Global Security Middleware
 app.use(helmet({
-  contentSecurityPolicy: false // Disabled for local assets / dev maps
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https://a.tile.openstreetmap.org", "https://b.tile.openstreetmap.org", "https://c.tile.openstreetmap.org", "https://cdnjs.cloudflare.com", "https://*.basemaps.cartocdn.com"]
+    }
+  }
 }));
+
+const corsOrigin = process.env.CORS_ORIGIN || '*';
 app.use(cors({
-  origin: '*',
+  origin: corsOrigin === '*' ? '*' : corsOrigin.split(','),
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(mongoSanitize);
+app.use(xssSanitize);
 
-// Request logging middleware
-app.use((req, res, next) => {
-  console.log(`[Incoming Request] ${req.method} ${req.originalUrl}`);
-  if (req.body && Object.keys(req.body).length > 0) {
-    const sanitizedBody = { ...req.body };
-    if (sanitizedBody.password) sanitizedBody.password = '******';
-    console.log(`[Request Body]`, JSON.stringify(sanitizedBody));
-  }
-  next();
-});
+const loggingMiddleware = require('./middlewares/logging');
+app.use(loggingMiddleware);
 
 // Global Rate Limiting
 const apiLimiter = rateLimit({
