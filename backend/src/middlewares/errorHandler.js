@@ -1,7 +1,10 @@
-const errorHandler = (err, req, res, next) => {
-  console.error(`[Error Handler] Catastrophic failure occurred:`, err);
+const logger = require('../config/logger');
 
-  const statusCode = err.statusCode || res.statusCode === 200 ? 500 : res.statusCode;
+const errorHandler = (err, req, res, next) => {
+  const reqId = req.requestId || 'N/A';
+  logger.error(`[REST] Catastrophic failure occurred: ${err.message}`, { requestId: reqId, stack: err.stack });
+
+  const statusCode = err.statusCode || (res.statusCode === 200 ? 500 : res.statusCode);
   const message = err.message || 'Internal Server Error';
 
   res.status(statusCode).json({

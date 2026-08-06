@@ -1,0 +1,100 @@
+{"level":"info","message":"[REST] GET /api/auth/me","metadata":{"requestId":"2d26c108-8b82-4f47-843e-7a49f2ac71aa"},"timestamp":"2026-08-06 12:22:34:2234"}
+{"level":"warn","message":"[REST] Responded with status 403","metadata":{"requestId":"2d26c108-8b82-4f47-843e-7a49f2ac71aa"},"timestamp":"2026-08-06 12:22:34:2234"}
+{"level":"info","message":"[REST] GET /api/auth/me","metadata":{"requestId":"0c9676f5-62ea-40ac-ba24-6fe1faddd3ef"},"timestamp":"2026-08-06 12:22:34:2234"}
+{"level":"warn","message":"[REST] Responded with status 403","metadata":{"requestId":"0c9676f5-62ea-40ac-ba24-6fe1faddd3ef"},"timestamp":"2026-08-06 12:22:34:2234"}
+{"level":"info","message":"[REST] POST /api/auth/login","metadata":{"requestId":"94e32c62-27f0-4828-a2a0-699092f5f163"},"timestamp":"2026-08-06 12:22:54:2254"}
+{"level":"warn","message":"[REST] Responded with status 400","metadata":{"requestId":"94e32c62-27f0-4828-a2a0-699092f5f163"},"timestamp":"2026-08-06 12:22:54:2254"}
+{"level":"info","message":"[REST] POST /api/auth/login","metadata":{"requestId":"37bbcfe2-c67d-46a6-b741-53e0f9d47c5f"},"timestamp":"2026-08-06 12:23:11:2311"}
+{"level":"info","message":"[REST] Responded with status 200","metadata":{"requestId":"37bbcfe2-c67d-46a6-b741-53e0f9d47c5f"},"timestamp":"2026-08-06 12:23:11:2311"}
+{"level":"info","message":"[REST] GET /api/auth/me","metadata":{"requestId":"6f16baa3-bc39-487c-b55f-a719af36e2cc"},"timestamp":"2026-08-06 12:23:11:2311"}
+{"level":"info","message":"[REST] GET /api/zones","metadata":{"requestId":"96e529ff-a401-4c85-9d44-44026eeb2504"},"timestamp":"2026-08-06 12:23:11:2311"}
+{"level":"info","message":"[REST] GET /api/scams","metadata":{"requestId":"309c08ec-1716-4ce0-89f5-f948877eeee7"},"timestamp":"2026-08-06 12:23:11:2311"}
+{"level":"info","message":"[REST] GET /api/alerts","metadata":{"requestId":"1b7e9eb2-0c8a-452e-ad0e-9acf6da07690"},"timestamp":"2026-08-06 12:23:11:2311"}
+{"level":"info","message":"[REST] GET /api/scams/hotspots","metadata":{"requestId":"5d40b6da-e9f1-4bfe-b817-5f039d841540"},"timestamp":"2026-08-06 12:23:11:2311"}
+{"level":"info","message":"[REST] Responded with status 200","metadata":{"requestId":"6f16baa3-bc39-487c-b55f-a719af36e2cc"},"timestamp":"2026-08-06 12:23:11:2311"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"309c08ec-1716-4ce0-89f5-f948877eeee7"},"timestamp":"2026-08-06 12:23:11:2311"}
+{"level":"info","message":"[REST] GET /api/attractions","metadata":{"requestId":"5426f254-c652-4ac8-9821-067e830bb06a"},"timestamp":"2026-08-06 12:23:11:2311"}
+{"level":"info","message":"[REST] Responded with status 200","metadata":{"requestId":"1b7e9eb2-0c8a-452e-ad0e-9acf6da07690"},"timestamp":"2026-08-06 12:23:11:2311"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"5d40b6da-e9f1-4bfe-b817-5f039d841540"},"timestamp":"2026-08-06 12:23:11:2311"}
+{"level":"info","message":"[REST] GET /api/community/posts","metadata":{"requestId":"efa59d59-2d0c-4c9d-a961-d15cc15b33ac"},"timestamp":"2026-08-06 12:23:11:2311"}
+{"level":"info","message":"[REST] Responded with status 200","metadata":{"requestId":"96e529ff-a401-4c85-9d44-44026eeb2504"},"timestamp":"2026-08-06 12:23:11:2311"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"efa59d59-2d0c-4c9d-a961-d15cc15b33ac"},"timestamp":"2026-08-06 12:23:11:2311"}
+{"level":"info","message":"[REST] Responded with status 200","metadata":{"requestId":"5426f254-c652-4ac8-9821-067e830bb06a"},"timestamp":"2026-08-06 12:23:11:2311"}
+{"level":"info","message":"[REST] GET /api/scams","metadata":{"requestId":"8c2354a2-00e0-4abe-94b6-6d6afcf0627b"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/alerts","metadata":{"requestId":"78ab6b23-ff6b-4c36-9738-6f81020653e7"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/scams/hotspots","metadata":{"requestId":"ae8716b0-2192-4f29-bef5-8527c8f6ae98"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/community/posts","metadata":{"requestId":"ed33f2d2-8fee-47c5-b05f-c7fe464538f4"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/zones","metadata":{"requestId":"63709e5f-f1e1-4dde-8a3a-feb58db60f67"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/attractions","metadata":{"requestId":"ecccf432-c642-42e3-83f0-2b0bfbbb50d7"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"8c2354a2-00e0-4abe-94b6-6d6afcf0627b"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"ae8716b0-2192-4f29-bef5-8527c8f6ae98"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"ed33f2d2-8fee-47c5-b05f-c7fe464538f4"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"78ab6b23-ff6b-4c36-9738-6f81020653e7"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"63709e5f-f1e1-4dde-8a3a-feb58db60f67"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"ecccf432-c642-42e3-83f0-2b0bfbbb50d7"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/trips","metadata":{"requestId":"8016ac66-1c16-465c-b3f8-42a219e863f8"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/scams","metadata":{"requestId":"18434a2f-135c-4765-a452-87bf0cdaa19f"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/scams/hotspots","metadata":{"requestId":"e0f5507c-b8f5-4330-abf2-83a327a9d56c"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/community/posts","metadata":{"requestId":"7eb3accd-72be-4d6f-9f80-d58c5beaf71b"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/tourist-reports","metadata":{"requestId":"97677134-77e6-487d-a5b5-3c2d68a7aa86"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/alerts","metadata":{"requestId":"7a6875f5-cdd9-4be5-9d5e-2b96b9907348"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"8016ac66-1c16-465c-b3f8-42a219e863f8"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"18434a2f-135c-4765-a452-87bf0cdaa19f"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"e0f5507c-b8f5-4330-abf2-83a327a9d56c"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"7eb3accd-72be-4d6f-9f80-d58c5beaf71b"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"7a6875f5-cdd9-4be5-9d5e-2b96b9907348"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/zones","metadata":{"requestId":"8e31be2f-7720-4ccf-afbf-17d62a297554"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/attractions","metadata":{"requestId":"2a868bf6-185a-4900-b78b-48c0fd9a747f"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/trips","metadata":{"requestId":"2ced6575-e512-4707-8065-bef660bb9b14"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/scams","metadata":{"requestId":"260fb8bb-87ab-4f28-a3ad-55738c5535dd"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/scams/hotspots","metadata":{"requestId":"a7225a40-73ad-47a0-8867-e81d7d0bed66"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"8e31be2f-7720-4ccf-afbf-17d62a297554"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"2a868bf6-185a-4900-b78b-48c0fd9a747f"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"2ced6575-e512-4707-8065-bef660bb9b14"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"260fb8bb-87ab-4f28-a3ad-55738c5535dd"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"a7225a40-73ad-47a0-8867-e81d7d0bed66"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/community/posts","metadata":{"requestId":"13233ed2-2737-4632-bf01-30a1e4228cff"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/alerts","metadata":{"requestId":"8ddf4042-d1ec-4121-b57a-7467bb2d9330"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/zones","metadata":{"requestId":"a13ca847-a93c-4249-ab9b-d5e2637d3b95"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/attractions","metadata":{"requestId":"fa7cb413-9473-4d05-9e6a-bf320e0fd8e3"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"13233ed2-2737-4632-bf01-30a1e4228cff"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/notifications","metadata":{"requestId":"e327baf6-77bb-41f9-8a71-70dd1b2c8fe6"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/trips","metadata":{"requestId":"66ef8d02-d043-4bd7-8aa7-5fbf66d6bb1b"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"a13ca847-a93c-4249-ab9b-d5e2637d3b95"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"fa7cb413-9473-4d05-9e6a-bf320e0fd8e3"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"8ddf4042-d1ec-4121-b57a-7467bb2d9330"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"e327baf6-77bb-41f9-8a71-70dd1b2c8fe6"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"66ef8d02-d043-4bd7-8aa7-5fbf66d6bb1b"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 200","metadata":{"requestId":"97677134-77e6-487d-a5b5-3c2d68a7aa86"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/notifications","metadata":{"requestId":"268ab38a-a900-4537-bb25-30b487ccb171"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/trips","metadata":{"requestId":"056ac1b7-3fc8-41ce-9ac1-d98e72e0ef58"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/tourist-reports","metadata":{"requestId":"d15000e2-5dcc-4939-b5f3-da2728ce26d6"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"268ab38a-a900-4537-bb25-30b487ccb171"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/offline-cache","metadata":{"requestId":"b0a83726-5a91-4eb4-beb3-25c7f8ac630e"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/notifications","metadata":{"requestId":"fc800065-418f-40b5-9378-b2d130864181"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"056ac1b7-3fc8-41ce-9ac1-d98e72e0ef58"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 200","metadata":{"requestId":"b0a83726-5a91-4eb4-beb3-25c7f8ac630e"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"fc800065-418f-40b5-9378-b2d130864181"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"d15000e2-5dcc-4939-b5f3-da2728ce26d6"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/offline-cache","metadata":{"requestId":"56eee467-9b85-4979-a7ab-50f8f3dab500"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/notifications","metadata":{"requestId":"c5325679-432a-4c5e-9441-388ae2e675cf"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/bookmarks","metadata":{"requestId":"6bd9fc44-5c4e-4f07-80e2-cecf7217b25e"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"56eee467-9b85-4979-a7ab-50f8f3dab500"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"c5325679-432a-4c5e-9441-388ae2e675cf"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/offline-cache","metadata":{"requestId":"7b84b237-a888-49cf-b64c-d7474fc72867"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"7b84b237-a888-49cf-b64c-d7474fc72867"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 200","metadata":{"requestId":"6bd9fc44-5c4e-4f07-80e2-cecf7217b25e"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/offline-cache","metadata":{"requestId":"46f9093a-faf3-40e4-b589-0520fe7daedd"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/bookmarks","metadata":{"requestId":"3d219d7b-0638-484e-8e77-b89651d86570"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"46f9093a-faf3-40e4-b589-0520fe7daedd"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"3d219d7b-0638-484e-8e77-b89651d86570"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/bookmarks","metadata":{"requestId":"15604a9b-b239-474e-bfcc-f96ed1be7a88"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"15604a9b-b239-474e-bfcc-f96ed1be7a88"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/bookmarks","metadata":{"requestId":"64f40ce4-5b09-468e-ba75-b654aeec9f42"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"64f40ce4-5b09-468e-ba75-b654aeec9f42"},"timestamp":"2026-08-06 12:23:12:2312"}
+{"level":"info","message":"[REST] GET /api/tourist-reports","metadata":{"requestId":"6652cb70-add6-4fa1-ae00-90616f7821f9"},"timestamp":"2026-08-06 12:23:22:2322"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"6652cb70-add6-4fa1-ae00-90616f7821f9"},"timestamp":"2026-08-06 12:23:22:2322"}
+{"level":"info","message":"[REST] GET /api/tourist-reports","metadata":{"requestId":"6f551236-9c30-4fa4-bd6c-1492e226df0a"},"timestamp":"2026-08-06 12:23:22:2322"}
+{"level":"info","message":"[REST] Responded with status 304","metadata":{"requestId":"6f551236-9c30-4fa4-bd6c-1492e226df0a"},"timestamp":"2026-08-06 12:23:23:2323"}
+{"level":"info","message":"[REST] POST /api/trips/generate","metadata":{"requestId":"c357cfef-219b-4cfb-a175-5c9d18f6ecbb"},"timestamp":"2026-08-06 12:23:51:2351"}
+{"level":"info","message":"[REST] Responded with status 201","metadata":{"requestId":"c357cfef-219b-4cfb-a175-5c9d18f6ecbb"},"timestamp":"2026-08-06 12:23:52:2352"}

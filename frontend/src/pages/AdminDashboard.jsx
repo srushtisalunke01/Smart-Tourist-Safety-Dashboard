@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Admin3DMap from '../components/Admin3DMap';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
+import api from '../services/api';
 
 // Upward Counting Animation Component
 function AnimatedCounter({ value }) {
@@ -46,7 +47,8 @@ export default function AdminDashboard() {
   const { token, user } = useAuthStore();
   const { 
     scams, activeSOS, resolveSOS, verifyScamReport, 
-    submitAlert, submitSafetyZone, triggerToast, zones, language, touristLocations
+    submitAlert, submitSafetyZone, triggerToast, zones, language, touristLocations,
+    posts, deleteCommunityPost
   } = useAppStore();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -56,6 +58,17 @@ export default function AdminDashboard() {
   const [viewMode, setViewMode] = useState('3d'); 
   const [selectedTourist, setSelectedTourist] = useState(null);
   const [cameraResetSignal, setCameraResetSignal] = useState(false);
+
+  const [activeTab, setActiveTab] = useState('analytics');
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    if (viewMode === 'ops') {
+      api.get('/users')
+        .then(res => setUsers(res.data))
+        .catch(err => console.error('Failed to fetch users', err));
+    }
+  }, [viewMode]);
 
   const [dronesActive] = useState(4);
   const [policeDispatches] = useState(3);
@@ -429,106 +442,275 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* Visual Analytics Chart */}
-            <div className="md:col-span-2 bg-white/85 dark:bg-slate-900/60 border border-slate-200 dark:border-white/5 p-5 rounded-2xl backdrop-blur-xl">
-              <h3 className="font-extrabold text-sm uppercase tracking-wider text-slate-800 dark:text-slate-300 mb-4">Historical Incident Index</h3>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={chartData}>
-                    <defs>
-                      <linearGradient id="colorSOS" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#ef4444" stopOpacity={0.4}/>
-                        <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#1e293b' : '#e2e8f0'} />
-                    <XAxis dataKey="name" stroke={isDark ? '#64748b' : '#475569'} fontSize={10} />
-                    <YAxis stroke={isDark ? '#64748b' : '#475569'} fontSize={10} />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: isDark ? '#0f172a' : '#ffffff', 
-                        borderColor: isDark ? '#334155' : '#cbd5e1',
-                        color: isDark ? '#f1f5f9' : '#0f172a',
-                        borderRadius: '8px',
-                        fontSize: '11px',
-                        fontWeight: 'bold'
-                      }} 
-                    />
-                    <Area type="monotone" dataKey="SOS" stroke="#ef4444" fillOpacity={1} fill="url(#colorSOS)" />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
+            {/* Tab navigation headers */}
+            <div className="md:col-span-3 flex border-b border-slate-200 dark:border-white/5 pb-2 gap-6 text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              {['analytics', 'users', 'sos', 'community', 'scams'].map(tab => (
+                <button
+                  key={tab}
+                  type="button"
+                  onClick={() => setActiveTab(tab)}
+                  className={`pb-2 border-b-2 transition-all cursor-pointer ${
+                    activeTab === tab 
+                      ? 'border-brand-500 text-brand-500 dark:text-brand-400 font-extrabold' 
+                      : 'border-transparent hover:text-slate-700 dark:hover:text-slate-350'
+                  }`}
+                >
+                  {tab === 'sos' ? 'SOS Alarms' : `${tab} Management`}
+                </button>
+              ))}
             </div>
 
-            {/* Forms section right */}
-            <div className="bg-white/85 dark:bg-slate-900/60 border border-slate-200 dark:border-white/5 p-5 rounded-2xl backdrop-blur-xl space-y-6">
-              
-              {/* Broadcast Alert */}
-              <form onSubmit={handleSendAlert} className="space-y-3">
-                <h4 className="font-extrabold text-xs uppercase tracking-wider text-red-650 dark:text-red-400 flex items-center gap-1.5">
-                  <Megaphone className="w-4.5 h-4.5" />
-                  Broadcast Regional warning
-                </h4>
-                <input
-                  type="text"
-                  placeholder="Warning Title"
-                  value={alertTitle}
-                  onChange={(e) => setAlertTitle(e.target.value)}
-                  className="w-full bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200"
-                />
-                <textarea
-                  placeholder="Warning Advisory details..."
-                  rows={2}
-                  value={alertMsg}
-                  onChange={(e) => setAlertMsg(e.target.value)}
-                  className="w-full bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200"
-                ></textarea>
-                <button
-                  type="submit"
-                  className="w-full bg-red-650 hover:bg-red-600 text-white font-extrabold text-[11px] py-2 rounded-xl"
-                >
-                  Broadcast Security Alert
-                </button>
-              </form>
-
-              {/* Define Geofence */}
-              <form onSubmit={handleCreateZone} className="space-y-3 pt-4 border-t border-slate-200 dark:border-white/5">
-                <h4 className="font-extrabold text-xs uppercase tracking-wider text-brand-600 dark:text-brand-400 flex items-center gap-1.5">
-                  <Navigation className="w-4.5 h-4.5" />
-                  Draw Geofenced safety zone
-                </h4>
-                <input
-                  type="text"
-                  placeholder="Zone Name"
-                  value={zoneName}
-                  onChange={(e) => setZoneName(e.target.value)}
-                  className="w-full bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200"
-                />
-                <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="text"
-                    placeholder="Latitude"
-                    value={zoneLat}
-                    onChange={(e) => setZoneLat(e.target.value)}
-                    className="bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[11px] text-slate-800 dark:text-slate-200"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Longitude"
-                    value={zoneLng}
-                    onChange={(e) => setZoneLng(e.target.value)}
-                    className="bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[11px] text-slate-800 dark:text-slate-200"
-                  />
+            {/* TAB PANELS RENDERING */}
+            {activeTab === 'analytics' && (
+              <>
+                {/* Visual Analytics Chart */}
+                <div className="md:col-span-2 bg-white/85 dark:bg-slate-900/60 border border-slate-200 dark:border-white/5 p-5 rounded-2xl backdrop-blur-xl">
+                  <h3 className="font-extrabold text-sm uppercase tracking-wider text-slate-800 dark:text-slate-300 mb-4">Historical Incident Index</h3>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={chartData}>
+                        <defs>
+                          <linearGradient id="colorSOS" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#ef4444" stopOpacity={0.4}/>
+                            <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#1e293b' : '#e2e8f0'} />
+                        <XAxis dataKey="name" stroke={isDark ? '#64748b' : '#475569'} fontSize={10} />
+                        <YAxis stroke={isDark ? '#64748b' : '#475569'} fontSize={10} />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: isDark ? '#0f172a' : '#ffffff', 
+                            borderColor: isDark ? '#334155' : '#cbd5e1',
+                            color: isDark ? '#f1f5f9' : '#0f172a',
+                            borderRadius: '8px',
+                            fontSize: '11px',
+                            fontWeight: 'bold'
+                          }} 
+                        />
+                        <Area type="monotone" dataKey="SOS" stroke="#ef4444" fillOpacity={1} fill="url(#colorSOS)" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
-                <button
-                  type="submit"
-                  className="w-full bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-[11px] py-2 rounded-xl"
-                >
-                  Establish Geofence Zone
-                </button>
-              </form>
 
-            </div>
+                {/* Forms section right */}
+                <div className="bg-white/85 dark:bg-slate-900/60 border border-slate-200 dark:border-white/5 p-5 rounded-2xl backdrop-blur-xl space-y-6">
+                  
+                  {/* Broadcast Alert */}
+                  <form onSubmit={handleSendAlert} className="space-y-3">
+                    <h4 className="font-extrabold text-xs uppercase tracking-wider text-red-650 dark:text-red-400 flex items-center gap-1.5">
+                      <Megaphone className="w-4.5 h-4.5" />
+                      Broadcast Regional warning
+                    </h4>
+                    <input
+                      type="text"
+                      placeholder="Warning Title"
+                      value={alertTitle}
+                      onChange={(e) => setAlertTitle(e.target.value)}
+                      className="w-full bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none"
+                    />
+                    <textarea
+                      placeholder="Warning Advisory details..."
+                      rows={2}
+                      value={alertMsg}
+                      onChange={(e) => setAlertMsg(e.target.value)}
+                      className="w-full bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none"
+                    ></textarea>
+                    <button
+                      type="submit"
+                      className="w-full bg-red-650 hover:bg-red-600 text-white font-extrabold text-[11px] py-2 rounded-xl transition-all shadow cursor-pointer"
+                    >
+                      Broadcast Security Alert
+                    </button>
+                  </form>
+
+                  {/* Define Geofence */}
+                  <form onSubmit={handleCreateZone} className="space-y-3 pt-4 border-t border-slate-200 dark:border-white/5">
+                    <h4 className="font-extrabold text-xs uppercase tracking-wider text-brand-600 dark:text-brand-400 flex items-center gap-1.5">
+                      <Navigation className="w-4.5 h-4.5" />
+                      Draw Geofenced safety zone
+                    </h4>
+                    <input
+                      type="text"
+                      placeholder="Zone Name"
+                      value={zoneName}
+                      onChange={(e) => setZoneName(e.target.value)}
+                      className="w-full bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none"
+                    />
+                    <div className="grid grid-cols-2 gap-2">
+                      <input
+                        type="text"
+                        placeholder="Latitude"
+                        value={zoneLat}
+                        onChange={(e) => setZoneLat(e.target.value)}
+                        className="bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[11px] text-slate-800 dark:text-slate-200 focus:outline-none"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Longitude"
+                        value={zoneLng}
+                        onChange={(e) => setZoneLng(e.target.value)}
+                        className="bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[11px] text-slate-800 dark:text-slate-200 focus:outline-none"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="w-full bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-[11px] py-2 rounded-xl transition-all shadow cursor-pointer"
+                    >
+                      Establish Geofence Zone
+                    </button>
+                  </form>
+                </div>
+              </>
+            )}
+
+            {activeTab === 'users' && (
+              <div className="md:col-span-3 bg-white/85 dark:bg-slate-900/60 border border-slate-200 dark:border-white/5 p-6 rounded-2xl backdrop-blur-xl space-y-4">
+                <h3 className="font-extrabold text-sm uppercase tracking-wider text-slate-805 dark:text-slate-300">Registered Users</h3>
+                <div className="overflow-x-auto no-scrollbar">
+                  <table className="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr className="border-b border-slate-200 dark:border-white/5 text-slate-450 dark:text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+                        <th className="py-2.5">Name</th>
+                        <th className="py-2.5">Email</th>
+                        <th className="py-2.5">Role</th>
+                        <th className="py-2.5 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {users.map(u => (
+                        <tr key={u._id} className="border-b border-slate-200 dark:border-white/5 last:border-0 hover:bg-slate-100/40 dark:hover:bg-white/5">
+                          <td className="py-3 font-semibold text-slate-800 dark:text-slate-200">{u.name}</td>
+                          <td className="py-3 text-slate-500 dark:text-slate-400 font-medium">{u.email}</td>
+                          <td className="py-3"><span className="px-2 py-0.5 rounded bg-brand-500/10 text-brand-500 uppercase font-extrabold text-[9px]">{u.role}</span></td>
+                          <td className="py-3 text-right space-x-2">
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                if (confirm(`Remove user ${u.name}?`)) {
+                                  try {
+                                    await api.delete(`/users/${u._id}`);
+                                    setUsers(users.filter(x => x._id !== u._id));
+                                    triggerToast('User removed successfully', 'info');
+                                  } catch (e) { console.error(e); }
+                                }
+                              }}
+                              className="px-2.5 py-1 bg-red-650 hover:bg-red-600 text-white rounded-lg text-[10px] font-bold cursor-pointer transition-colors"
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'sos' && (
+              <div className="md:col-span-3 bg-white/85 dark:bg-slate-900/60 border border-slate-200 dark:border-white/5 p-6 rounded-2xl backdrop-blur-xl space-y-4">
+                <h3 className="font-extrabold text-sm uppercase tracking-wider text-slate-805 dark:text-slate-300">Active SOS Panic Beacons</h3>
+                {activeSOS.length === 0 ? (
+                  <p className="text-xs text-slate-500 py-12 text-center font-medium">No active SOS signals reported.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {activeSOS.map(sos => (
+                      <div key={sos._id || sos.id} className="flex justify-between items-center bg-red-950/15 border border-red-500/20 p-4 rounded-2xl">
+                        <div>
+                          <p className="font-extrabold text-xs text-red-500">🚨 Tourist: {sos.user?.name || 'Explorer'}</p>
+                          <p className="text-[10px] text-slate-500 mt-1 font-bold">Coordinates: {sos.lat?.toFixed(4)}, {sos.lng?.toFixed(4)}</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            try {
+                              await resolveSOS(token, sos._id || sos.id);
+                              triggerToast('SOS beacon resolved.', 'success');
+                            } catch (err) { console.error(err); }
+                          }}
+                          className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                        >
+                          Resolve Alert
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'community' && (
+              <div className="md:col-span-3 bg-white/85 dark:bg-slate-900/60 border border-slate-200 dark:border-white/5 p-6 rounded-2xl backdrop-blur-xl space-y-4">
+                <h3 className="font-extrabold text-sm uppercase tracking-wider text-slate-850 dark:text-slate-300">Community Post Moderation</h3>
+                <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1 no-scrollbar">
+                  {posts && posts.length > 0 ? posts.map(post => (
+                    <div key={post._id} className="flex justify-between items-start bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/5 p-4 rounded-2xl gap-4">
+                      <div className="space-y-1">
+                        <p className="font-bold text-xs text-slate-800 dark:text-slate-200">{post.title}</p>
+                        <p className="text-[10px] text-slate-500 truncate max-w-lg font-medium">{post.content}</p>
+                        <span className="text-[9px] text-brand-500 font-extrabold">By: {post.user?.name || 'Explorer'}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          if (confirm('Delete this forum review post?')) {
+                            try {
+                              await deleteCommunityPost(post._id);
+                              triggerToast('Post deleted successfully.', 'info');
+                            } catch (err) { console.error(err); }
+                          }
+                        }}
+                        className="px-2.5 py-1.5 bg-red-650 hover:bg-red-600 text-white rounded-lg text-[10px] font-bold shrink-0 cursor-pointer transition-colors"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  )) : (
+                    <p className="text-xs text-slate-500 py-12 text-center font-medium">No community posts found.</p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'scams' && (
+              <div className="md:col-span-3 bg-white/85 dark:bg-slate-900/60 border border-slate-200 dark:border-white/5 p-6 rounded-2xl backdrop-blur-xl space-y-4">
+                <h3 className="font-extrabold text-sm uppercase tracking-wider text-slate-805 dark:text-slate-300">Reported Scams Verification</h3>
+                <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1 no-scrollbar">
+                  {scams.length > 0 ? scams.map(scam => (
+                    <div key={scam._id || scam.id} className="flex justify-between items-start bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/5 p-4 rounded-2xl gap-4">
+                      <div className="space-y-1">
+                        <p className="font-bold text-xs text-slate-800 dark:text-slate-200">Category: {scam.category}</p>
+                        <p className="text-[10px] text-slate-555 dark:text-slate-400 font-medium">{scam.description}</p>
+                        <p className="text-[9px] text-slate-450 font-bold">Location: {scam.address}</p>
+                        <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider border ${
+                          scam.status === 'verified' 
+                            ? 'bg-emerald-950/20 border-emerald-500/30 text-emerald-600 dark:text-emerald-400' 
+                            : 'bg-amber-950/20 border-amber-500/30 text-amber-600 dark:text-amber-400'
+                        }`}>{scam.status}</span>
+                      </div>
+                      {scam.status !== 'verified' && (
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            try {
+                              await verifyScamReport(token, scam._id || scam.id);
+                              triggerToast('Scam report marked as verified.', 'success');
+                            } catch (err) { console.error(err); }
+                          }}
+                          className="px-2.5 py-1.5 bg-emerald-650 hover:bg-emerald-600 text-white rounded-xl text-[10px] font-bold shrink-0 transition-colors cursor-pointer"
+                        >
+                          Verify Report
+                        </button>
+                      )}
+                    </div>
+                  )) : (
+                    <p className="text-xs text-slate-500 py-12 text-center font-medium">No scams reported.</p>
+                  )}
+                </div>
+              </div>
+            )}
 
           </div>
         )}

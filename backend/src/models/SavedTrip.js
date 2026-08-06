@@ -17,4 +17,6 @@ const SavedTripSchema = new mongoose.Schema({
   }
 });
 
+SavedTripSchema.index({ user: 1 });
+
 module.exports = mongoose.model('SavedTrip', SavedTripSchema);
