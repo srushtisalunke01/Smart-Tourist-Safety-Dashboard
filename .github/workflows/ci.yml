@@ -28,8 +28,8 @@ jobs:
       run: |
         cd backend
         npm ci
-        npx prisma generate
         npm run build
+
 
     # Test Frontend Build
     - name: Build Frontend

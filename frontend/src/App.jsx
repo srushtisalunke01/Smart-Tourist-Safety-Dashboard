@@ -79,6 +79,8 @@ const ProtectedRoute = ({ children }) => {
   return user ? <>{children}</> : <Navigate to="/login" replace />;
 };
 
+import JudgeDemoDock from './components/JudgeDemoDock';
+
 const AppContent = () => {
   const { user, token, loadUser } = useAuthStore();
   const { initSocket, fetchData } = useAppStore();
@@ -154,9 +156,13 @@ const AppContent = () => {
 
       {/* Floating emergency widgets for logged in users */}
       {user && <FloatingActionContainer />}
+
+      {/* Hackathon Judge Presentation Control Dock */}
+      <JudgeDemoDock />
     </div>
   );
 };
+
 
 export default function App() {
   return (
