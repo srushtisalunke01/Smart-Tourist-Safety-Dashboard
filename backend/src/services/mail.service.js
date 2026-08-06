@@ -1,52 +1,86 @@
 const nodemailer = require('nodemailer');
 const redisConfig = require('../config/redis');
 
-// Set up transporter using environment variables
+// Normalize environment variables for SMTP authentication
+const getEmailCredentials = () => {
+  const user = process.env.EMAIL_USER || process.env.EMAIL;
+  const pass = process.env.EMAIL_PASS || process.env.EMAIL_PASSWORD;
+  return { user, pass };
+};
+
+// Set up transporter using environment variables or Gmail service
 const createTransporter = () => {
+  const { user, pass } = getEmailCredentials();
+  
+  if (process.env.SMTP_SERVICE === 'gmail' || (!process.env.SMTP_HOST && user?.endsWith('@gmail.com'))) {
+    return nodemailer.createTransport({
+      service: 'gmail',
+      auth: { user, pass }
+    });
+  }
+
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: process.env.SMTP_PORT || 587,
-    secure: false,
-    auth: {
-      user: process.env.EMAIL || 'safetour.mock.smtp@gmail.com',
-      pass: process.env.EMAIL_PASSWORD || 'mock_pass_12345'
-    }
+    port: Number(process.env.SMTP_PORT) || 587,
+    secure: process.env.SMTP_SECURE === 'true', // true for 465, false for 587
+    auth: user && pass ? { user, pass } : undefined
   });
 };
 
 const sendMailDirect = async (options) => {
+  const { user, pass } = getEmailCredentials();
+
+  // Step 5 Audit: Guarantee recipient is always options.to (the user's email)
+  const recipientEmail = options.to;
+  if (!recipientEmail) {
+    console.error('[Mail Error] Recipient email (options.to) is missing!');
+    throw new Error('Recipient email address is required.');
+  }
+
+  console.log(`[Mail Audit] Dispatching OTP Email to user: ${recipientEmail}`);
+
+  // Fallback simulator if credentials are not configured or set to placeholder
+  if (!user || !pass || user === 'safetour.mock.smtp@gmail.com') {
+    console.log(`[Mail Simulator] Real SMTP credentials not detected in .env (EMAIL_USER / EMAIL_PASS). Dispatching OTP code for ${recipientEmail} via console log.`);
+    return { messageId: 'simulated_mail_' + Date.now() };
+  }
+
   try {
     const transporter = createTransporter();
+
+    // Verify SMTP Transporter before sending
+    await transporter.verify();
+    console.log('[Mail] SMTP Transporter verified successfully.');
+
     const mailOptions = {
-      from: `"SafeTour AI Support" <${process.env.EMAIL || 'safetour.mock.smtp@gmail.com'}>`,
-      to: options.to,
+      from: `"SafeTour AI Support" <${user}>`,
+      to: recipientEmail, // MUST always send to the email entered during signup
       subject: options.subject,
       text: options.text,
       html: options.html
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log(`[Mail] Direct email sent successfully to ${options.to}: ${info.messageId}`);
+    console.log(`[Mail SUCCESS] Email delivered to recipient inbox ${recipientEmail}: ${info.messageId}`);
     return info;
   } catch (error) {
-    console.error(`[Mail] Direct mail sending error: ${error.message}`);
+    console.error(`[Mail ERROR] SMTP Delivery failed for ${recipientEmail}:`, error.message);
+    if (error.code === 'EAUTH' || error.responseCode === 535) {
+      console.error('[Mail ERROR] Gmail Authentication Failed! Ensure 2-Step Verification is enabled and a Google App Password (not your account password) is set as EMAIL_PASS in backend/.env.');
+    }
   }
 };
 
 const sendMail = async (options) => {
-  // If Redis is active, queue the task for background BullMQ processing
   if (redisConfig.isRedisConnected() && redisConfig.emailQueue) {
     try {
       await redisConfig.emailQueue.add('sendEmailJob', options, {
         attempts: 3,
-        backoff: {
-          type: 'exponential',
-          delay: 5000
-        }
+        backoff: { type: 'exponential', delay: 5000 }
       });
-      console.log(`[Mail] Email queued successfully: ${options.subject}`);
+      console.log(`[Mail Queue] Queued email to ${options.to}`);
     } catch (err) {
-      console.warn(`[Mail] Queue failed, falling back to direct sending: ${err.message}`);
+      console.warn(`[Mail Queue Warning] Falling back to direct send: ${err.message}`);
       await sendMailDirect(options);
     }
   } else {

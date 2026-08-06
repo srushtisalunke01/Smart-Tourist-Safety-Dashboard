@@ -344,6 +344,65 @@ class AuthController {
     }
   }
 
+  async forgotPassword(req, res, next) {
+    const { email } = req.body;
+    try {
+      const normalizedEmail = email.toLowerCase().trim();
+      const user = await userRepository.findOne({ email: normalizedEmail });
+      if (!user) return res.status(400).json({ message: 'No registered user found with this email address.' });
+
+      const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+      const hashedOtp = await bcrypt.hash(otpCode, 10);
+
+      user.resetPasswordOtp = hashedOtp;
+      user.resetPasswordExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 mins expiry
+      await user.save();
+
+      console.log(`[PASSWORD RESET DEBUG] Sent Reset OTP ${otpCode} to ${normalizedEmail}`);
+
+      const { sendMail } = require('../services/mail.service');
+      sendMail({
+        to: normalizedEmail,
+        subject: 'Reset your SafeTour AI Password',
+        text: `Hello ${user.name},\n\nYour password reset security code is: ${otpCode}\n\nValid for 10 minutes.\n\nSafeTour AI Team`,
+        html: `<div style="font-family:sans-serif;padding:20px;background:#0f172a;color:#fff;border-radius:12px;"><h2>SafeTour AI Password Reset</h2><p>Your 6-digit password reset code is:</p><h1 style="color:#38bdf8;letter-spacing:6px;">${otpCode}</h1><p>Valid for 10 minutes.</p></div>`
+      }).catch(e => console.error('[Reset Mail Error]', e));
+
+      res.status(200).json({ message: 'Password reset OTP sent to your email.' });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async resetPassword(req, res, next) {
+    const { email, otp, newPassword } = req.body;
+    try {
+      const normalizedEmail = email.toLowerCase().trim();
+      const user = await userRepository.findOne({ email: normalizedEmail });
+      if (!user || !user.resetPasswordOtp || !user.resetPasswordExpires) {
+        return res.status(400).json({ message: 'Password reset session not found or expired.' });
+      }
+
+      if (new Date() > new Date(user.resetPasswordExpires)) {
+        return res.status(400).json({ message: 'Reset code expired. Please request a new password reset.' });
+      }
+
+      const isMatch = await bcrypt.compare(otp.trim(), user.resetPasswordOtp);
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Invalid reset code. Please check your email and try again.' });
+      }
+
+      user.password = await bcrypt.hash(newPassword, 10);
+      user.resetPasswordOtp = undefined;
+      user.resetPasswordExpires = undefined;
+      await user.save();
+
+      res.status(200).json({ message: 'Password updated successfully. Please log in with your new password.' });
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async updatePlaces(req, res, next) {
     try {
       const user = await userRepository.update(req.user.id, { savedPlaces: req.body.savedPlaces });
@@ -355,3 +414,4 @@ class AuthController {
 }
 
 module.exports = new AuthController();
+

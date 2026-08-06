@@ -13,21 +13,29 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const [unverifiedEmail, setUnverifiedEmail] = useState(null);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) return setError('Please fill in all credentials.');
 
     setError('');
+    setUnverifiedEmail(null);
     setLoading(true);
     try {
       await login(email, password);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Login failed. Verify credentials.');
+      const msg = err.message || 'Login failed. Verify credentials.';
+      setError(msg);
+      if (msg.toLowerCase().includes('verify your email')) {
+        setUnverifiedEmail(email);
+      }
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleGoogleMock = async () => {
     setLoading(true);
@@ -73,11 +81,24 @@ export default function Login() {
         </div>
 
         {error && (
-          <div className="mb-4 bg-red-950/30 border border-red-500/20 text-red-400 p-3.5 rounded-xl text-xs flex items-center gap-2">
-            <span className="text-base">⚠️</span>
-            <span className="font-semibold">{error}</span>
+          <div className="mb-4 bg-red-950/30 border border-red-500/20 text-red-400 p-3.5 rounded-xl text-xs space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="text-base">⚠️</span>
+              <span className="font-semibold">{error}</span>
+            </div>
+            {unverifiedEmail && (
+              <div className="pt-1">
+                <Link
+                  to={`/verify-email?email=${encodeURIComponent(unverifiedEmail)}`}
+                  className="inline-block px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-white rounded-lg font-bold text-[11px] transition-all"
+                >
+                  Verify Email Now →
+                </Link>
+              </div>
+            )}
           </div>
         )}
+
 
         {/* Credentials Form */}
         <form onSubmit={handleSubmit} className="space-y-4">

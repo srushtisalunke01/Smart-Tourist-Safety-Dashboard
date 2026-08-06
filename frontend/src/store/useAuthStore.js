@@ -41,20 +41,45 @@ export const useAuthStore = create((set, get) => ({
     try {
       const response = await api.post('/auth/register', { name, email, password, role, extraInfo });
       const data = response.data;
-
-      localStorage.setItem('token', data.token);
-      set({ token: data.token, user: normalizeUser(data.user), loading: false });
-      
-      // Load full user details
-      await get().loadUser();
-      
-      return get().user;
+      set({ loading: false });
+      return data;
     } catch (err) {
       const errMsg = err.response?.data?.message || err.message || 'Registration failed';
       set({ error: errMsg, loading: false });
       throw new Error(errMsg);
     }
   },
+
+  verifyOtp: async (email, otp) => {
+    set({ error: null, loading: true });
+    try {
+      const response = await api.post('/auth/verify-otp', { email, otp });
+      const data = response.data;
+
+      localStorage.setItem('token', data.token);
+      set({ token: data.token, user: normalizeUser(data.user), loading: false });
+
+      await get().loadUser();
+      return get().user;
+    } catch (err) {
+      const errMsg = err.response?.data?.message || err.message || 'OTP Verification failed';
+      set({ error: errMsg, loading: false });
+      throw new Error(errMsg);
+    }
+  },
+
+  resendOtp: async (email) => {
+    set({ error: null });
+    try {
+      const response = await api.post('/auth/resend-otp', { email });
+      return response.data;
+    } catch (err) {
+      const errMsg = err.response?.data?.message || err.message || 'Resend OTP failed';
+      set({ error: errMsg });
+      throw new Error(errMsg);
+    }
+  },
+
 
   loginWithGoogle: async (googleData) => {
     set({ error: null, loading: true });

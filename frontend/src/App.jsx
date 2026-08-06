@@ -16,6 +16,8 @@ import { useAppStore } from './store/useAppStore';
 const Landing = lazy(() => import('./pages/Landing'));
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
+const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
+
 const TouristDashboard = lazy(() => import('./pages/TouristDashboard'));
 const TripPlanner = lazy(() => import('./pages/TripPlanner'));
 const WomenSafety = lazy(() => import('./pages/WomenSafety'));
@@ -114,6 +116,8 @@ const AppContent = () => {
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
+
             
             <Route path="/dashboard" element={<DashboardSelector />} />
             

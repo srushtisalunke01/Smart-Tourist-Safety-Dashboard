@@ -23,9 +23,13 @@ export default function Register() {
   const [teamName, setTeamName] = useState('');
   const [specialty, setSpecialty] = useState('');
 
+  const [confirmPassword, setConfirmPassword] = useState('');
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !email || !password) return setError('Please fill in all registration fields.');
+    if (!name || !email || !password || !confirmPassword) return setError('Please fill in all registration fields.');
+    if (password !== confirmPassword) return setError('Passwords do not match. Please verify your password entry.');
+    if (password.length < 6) return setError('Password must be at least 6 characters in length.');
 
     setError('');
     setLoading(true);
@@ -41,14 +45,16 @@ export default function Register() {
     }
 
     try {
-      await register(name, email, password, role, extraInfo);
-      navigate('/dashboard');
+      const res = await register(name, email, password, role, extraInfo);
+      const targetEmail = res?.email || email;
+      navigate(`/verify-email?email=${encodeURIComponent(targetEmail)}`);
     } catch (err) {
       setError(err.message || 'Registration failed. Try again.');
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleGoogleMock = async () => {
     setLoading(true);
@@ -89,11 +95,32 @@ export default function Register() {
         </div>
 
         {error && (
-          <div className="mb-4 bg-red-950/30 border border-red-500/20 text-red-400 p-3.5 rounded-xl text-xs flex items-center gap-2">
-            <span className="text-base">⚠️</span>
-            <span className="font-semibold">{error}</span>
+          <div className="mb-4 bg-red-950/30 border border-red-500/20 text-red-400 p-3.5 rounded-xl text-xs space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="text-base">⚠️</span>
+              <span className="font-semibold">{error}</span>
+            </div>
+            {error.toLowerCase().includes('already exists') && (
+              <div className="pt-1 flex gap-2">
+                <Link
+                  to="/login"
+                  className="inline-block px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-white rounded-lg font-bold text-[11px] transition-all"
+                >
+                  Sign In to Existing Account →
+                </Link>
+                {email && (
+                  <Link
+                    to={`/verify-email?email=${encodeURIComponent(email)}`}
+                    className="inline-block px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-bold text-[11px] transition-all"
+                  >
+                    Verify Email →
+                  </Link>
+                )}
+              </div>
+            )}
           </div>
         )}
+
 
         <form onSubmit={handleSubmit} className="space-y-4">
           
@@ -141,6 +168,22 @@ export default function Register() {
               />
             </div>
           </div>
+
+          {/* Confirm Password */}
+          <div className="space-y-1.5">
+            <label className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Confirm Password</label>
+            <div className="relative">
+              <Lock className="absolute left-4 top-3.5 w-4 h-4 text-slate-500" />
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-white/10 focus:border-brand-500 focus:outline-none rounded-xl pl-11 pr-4 py-3 text-xs text-slate-800 dark:text-slate-200"
+              />
+            </div>
+          </div>
+
 
           {/* Role Dropdown Selector */}
           <div className="space-y-1.5">
