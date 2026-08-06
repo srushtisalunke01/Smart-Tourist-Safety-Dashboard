@@ -67,13 +67,16 @@ app.use(xssSanitize);
 const loggingMiddleware = require('./middlewares/logging');
 app.use(loggingMiddleware);
 
-// Global Rate Limiting
+// Global Rate Limiting (Bypassed for local development & live dashboard telemetry)
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 300,
+  max: 10000,
+  skip: (req) => process.env.NODE_ENV !== 'production' || req.ip === '127.0.0.1' || req.ip === '::1' || req.ip === '::ffff:127.0.0.1',
   message: { message: 'Too many requests from this IP. Please try again later.' }
 });
 app.use('/api/', apiLimiter);
+
+
 
 // Route Setup
 app.use('/api/auth', require('./routes/auth'));

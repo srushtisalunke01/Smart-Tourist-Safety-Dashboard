@@ -149,7 +149,7 @@ const TripPlanner = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">{t("settings")}</label>
+              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">{t("tripPlanner.travelStyle")}</label>
               <select
                 value={travelStyle}
                 onChange={(e) => setTravelStyle(e.target.value)}
@@ -163,7 +163,7 @@ const TripPlanner = () => {
           {/* Group & Transport */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">{t("profileTitle")}</label>
+              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">{t("tripPlanner.groupType")}</label>
               <select
                 value={groupType}
                 onChange={(e) => setGroupType(e.target.value)}
@@ -174,7 +174,7 @@ const TripPlanner = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">{t("opsTitle")}</label>
+              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">{t("tripPlanner.transportation")}</label>
               <select
                 value={transportation}
                 onChange={(e) => setTransportation(e.target.value)}
@@ -184,6 +184,7 @@ const TripPlanner = () => {
               </select>
             </div>
           </div>
+
 
           {/* Interests Category Checklist */}
           <div className="space-y-2">

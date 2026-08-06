@@ -165,10 +165,11 @@ export default function App() {
         <LanguageProvider>
           <AppProvider>
             <QueryClientProvider client={queryClient}>
-              <Router>
+              <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <AppContent />
               </Router>
             </QueryClientProvider>
+
           </AppProvider>
         </LanguageProvider>
       </AuthProvider>

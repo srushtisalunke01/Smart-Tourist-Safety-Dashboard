@@ -96,6 +96,9 @@ export const translations = {
     "tripPlanner.itinerary": "Generated Safe Itinerary Grid",
     "tripPlanner.ecoScore": "Eco Index Score",
     "tripPlanner.safetyScore": "Safety Route Index",
+    "tripPlanner.travelStyle": "Travel Style",
+    "tripPlanner.groupType": "Group Type",
+    "tripPlanner.transportation": "Preferred Transit",
 
     // Women Safety Page
     "womenSafety.title": "Women Protection & SOS Console",
@@ -251,6 +254,9 @@ export const translations = {
     "tripPlanner.itinerary": "उत्पन्न सुरक्षित यात्रा कार्यक्रम ग्रिड",
     "tripPlanner.ecoScore": "पर्यावरण सूचकांक स्कोर",
     "tripPlanner.safetyScore": "सुरक्षा मार्ग सूचकांक",
+    "tripPlanner.travelStyle": "यात्रा शैली",
+    "tripPlanner.groupType": "समूह का प्रकार",
+    "tripPlanner.transportation": "पसंदीदा परिवहन",
 
     // Women Safety Page
     "womenSafety.title": "महिला संरक्षण एवं एसओएस कंसोल",
@@ -406,6 +412,9 @@ export const translations = {
     "tripPlanner.itinerary": "तयार झालेला सुरक्षित प्रवास आराखडा",
     "tripPlanner.ecoScore": "पर्यावरण निर्देशांक गुण",
     "tripPlanner.safetyScore": "सुरक्षा मार्ग निर्देशांक",
+    "tripPlanner.travelStyle": "प्रवासाची शैली",
+    "tripPlanner.groupType": "गटाचा प्रकार",
+    "tripPlanner.transportation": "पसंतीची वाहतूक",
 
     // Women Safety Page
     "womenSafety.title": "महिला संरक्षण आणि एसओएस कन्सोल",
@@ -561,6 +570,9 @@ export const translations = {
     "tripPlanner.itinerary": "প্ৰস্তুত কৰা সুৰক্ষিত ভ্ৰমণ তালিকা",
     "tripPlanner.ecoScore": "পৰিৱেশ সূচক মূল্যায়ন",
     "tripPlanner.safetyScore": "সুৰক্ষা পথ সূচক",
+    "tripPlanner.travelStyle": "ভ্ৰমণৰ শৈলী",
+    "tripPlanner.groupType": "দলৰ প্ৰকাৰ",
+    "tripPlanner.transportation": "পছন্দৰ পৰিবহণ",
 
     // Women Safety Page
     "womenSafety.title": "মহিলা সুৰক্ষা আৰু এছঅ’ছ কনচোল",
